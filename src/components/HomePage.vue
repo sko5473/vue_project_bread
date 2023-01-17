@@ -18,59 +18,59 @@
                     <ul class="module_ul">
                         <li class="module_li">
                             <!-- 사진 -->
-                            <img class="module_bread_img" @click="handleContent()" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
+                            <img class="module_bread_img" @click="handleContent('부산진구')" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
                             <!-- 사진 내 정보 박스 -->
                             <figure class="module_info">
                                 <!-- 사진 내 정보 -->
                                 <div class="inner_info">
-                                    <span class="li_inner_title" >부산진구1 제과점 Best50</span>
+                                    <span class="li_inner_title" >부산진구 제과점 Best50</span>
                                     <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
                                 </div>
                             </figure>
                         </li>
                         <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
+                            <img class="module_bread_img"  @click="handleContent('해운대구')" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
                             <figure class="module_info">
                                 <div class="inner_info">
-                                    <span class="li_inner_title">해운대구1 제과점 Best50</span>
+                                    <span class="li_inner_title">해운대구 제과점 Best50</span>
                                     <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
                                 </div>
                             </figure>
                         </li>
                         <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
+                            <img class="module_bread_img"  @click="handleContent('동구')" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
                             <figure class="module_info">
                                 <div class="inner_info">
-                                    <span class="li_inner_title">동구1 제과점 Best50</span>
+                                    <span class="li_inner_title">동구 제과점 Best50</span>
                                     <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
                                 </div>
                             </figure>
                         </li>
                         <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
+                            <img class="module_bread_img" @click="handleContent('남구')" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
                             <figure class="module_info">
                                 <div class="inner_info">
-                                    <span class="li_inner_title">남구1 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
-                                </div>
-                            </figure>
-                        </li>
-
-                        <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
-                            <figure class="module_info">
-                                <div class="inner_info">
-                                    <span class="li_inner_title">동래구1 제과점 Best50</span>
+                                    <span class="li_inner_title">남구 제과점 Best50</span>
                                     <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
                                 </div>
                             </figure>
                         </li>
 
                         <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
+                            <img class="module_bread_img" @click="handleContent('동래구')" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
                             <figure class="module_info">
                                 <div class="inner_info">
-                                    <span class="li_inner_title">중구1 제과점 Best50</span>
+                                    <span class="li_inner_title">동래구 제과점 Best50</span>
+                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
+                                </div>
+                            </figure>
+                        </li>
+
+                        <li class="module_li">
+                            <img class="module_bread_img" @click="handleContent('중구')" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
+                            <figure class="module_info">
+                                <div class="inner_info">
+                                    <span class="li_inner_title">중구 제과점 Best50</span>
                                     <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
                                 </div>
                             </figure>
@@ -244,8 +244,9 @@ export default {
 
     setup() {
 
-        const handleContent = async() => {
-            router.push({ path:'/bakerydetail', query: {place : "busanjingu"}});
+        const handleContent = async(place) => {
+            console.log('장소',place);
+            router.push({ path:'/bakerydetail', query: {page:1, text : place}});
         };
 
         const slides = [
