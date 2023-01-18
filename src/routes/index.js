@@ -4,14 +4,14 @@ import { createWebHistory, createRouter } from "vue-router";
 
 // 2. 라우트 설정
 import Home from '@/components/HomePage.vue';
-import BakeryDetail from '@/components/BakeryDetailPage.vue';
+import BakeryCategoryList from '@/components/BakeryCategoryListPage.vue';
 
 
 const router = createRouter({
     history : createWebHistory(),
     routes : [
         {path:'/', component:Home},
-        {path:'/bakerydetail', component:BakeryDetail},
+        {path:'/bakerycategorylist', component:BakeryCategoryList},
     ]
 });
 

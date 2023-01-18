@@ -64,13 +64,9 @@ export default {
 #wrap {
     height: 50px;
     line-height: 50px;
-    position: fixed;
     width:1565px;
-    z-index:2;
     border-bottom:2px solid #cccccc;
     background-color: whitesmoke;
-    left:50%;
-    margin-left:-782px;
 }
 
 ul, li {

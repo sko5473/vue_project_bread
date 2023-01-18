@@ -246,7 +246,7 @@ export default {
 
         const handleContent = async(place) => {
             console.log('장소',place);
-            router.push({ path:'/bakerydetail', query: {page:1, text : place}});
+            router.push({ path:'/bakerycategorylist', query: {page:1, text : place}});
         };
 
         const slides = [

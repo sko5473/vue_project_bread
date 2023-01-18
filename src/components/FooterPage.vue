@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="wrap">
         <strong><p id="footer">copyright 2023</p></strong>
     </div>
 </template>
@@ -14,6 +14,15 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
+#wrap{
+    height:400px;
+    background: rgb(170, 168, 168);
+    width:1565px;
+}
+#footer{
+    color:white;
+    font-size:20px;
+}
 
 </style>
