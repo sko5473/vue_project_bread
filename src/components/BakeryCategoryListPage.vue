@@ -15,7 +15,6 @@
                 </div>
             </div>
         </div>
-
         <!-- 내용 -->
         <div id="content">
             <!-- 헤더박스 -->
@@ -24,7 +23,7 @@
             </div>
             <div class="one_shop_box" v-for="data of state.rows" :key="data">
                 <div class="img_div">
-                    <img class="shop_img" :src="data.imageurl" alt="" />
+                    <img class="shop_img" :src="data.imageurl" @click="bakeryonemove(data._id)" alt="" />
                 </div>
                 <div class="shop_information_box">
                     <div class="shop_name">{{ data.name }}</div>
@@ -69,6 +68,11 @@ export default {
                 state.total = data.total;
             }
         };
+
+        //빵집 상세페이지 이동
+        const bakeryonemove = (no) => {
+            router.push({path:'/bakeryone',query:{_id:no}})
+        }
 
         //지역별 빵 맛집 리스트 바로가기 버튼 클릭시 이동
         const movearea = (place) => {
@@ -125,6 +129,7 @@ export default {
             initMap,
             movearea,
             handlePage,
+            bakeryonemove,
         };
     }
 }

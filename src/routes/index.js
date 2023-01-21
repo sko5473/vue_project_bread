@@ -5,6 +5,8 @@ import { createWebHistory, createRouter } from "vue-router";
 // 2. 라우트 설정
 import Home from '@/components/HomePage.vue';
 import BakeryCategoryList from '@/components/BakeryCategoryListPage.vue';
+import BakeryOne from '@/components/BakeryOnePage.vue';
+import BakeryReviewWrite from '@/components/BakeryReviewWritePage.vue';
 
 
 const router = createRouter({
@@ -12,6 +14,8 @@ const router = createRouter({
     routes : [
         {path:'/', component:Home},
         {path:'/bakerycategorylist', component:BakeryCategoryList},
+        {path:'/bakeryone', component:BakeryOne},
+        {path:'/bakeryreviewwrite', component:BakeryReviewWrite},
     ]
 });
 

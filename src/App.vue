@@ -38,22 +38,22 @@ export default {
 }
 
 #wrap{
-  position:relative;
-  height:auto;
+  /* position:relative; */
+  /* height:auto; */
 }
 
 #menu{
   position:fixed;
-  left:50%;
+  /* left:50%;
   margin-left:-782px;
-  z-index:2;
+  z-index:2; */
 }
 
 #view{
-  position:absolute;
+  /* position:absolute;
   top:50px;
   left:50%;
-  margin-left:-782px;
+  margin-left:-782px; */
 }
 
 #footer{
