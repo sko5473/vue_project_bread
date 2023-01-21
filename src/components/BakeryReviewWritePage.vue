@@ -4,6 +4,11 @@
         <h3>리뷰쓰기</h3>
 
         <div>
+            <label for="writer">작성자</label>
+            <input type="text" v-model="state.writer"/>
+        </div>
+
+        <div>
             <label for="point">평점</label>
             <input type="number" v-model="state.point"/>
         </div>
@@ -43,6 +48,7 @@ export default {
             file: null,
             img: require('../assets/imgs/noimage.gif'),
             no : route.query._id,
+            writer : '',
         });
 
         //리뷰 이미지 파일관리
@@ -62,6 +68,7 @@ export default {
             const url = `/api/bakeryreview/insertshopreview.json?_id=${state.no}`;
             const headers = { "Content-Type": "multipart/form-data" };
             const body = new FormData();
+            body.append("writer",state.writer);
             body.append("point",state.point);
             body.append("content",state.content);
             body.append("file",state.file);
