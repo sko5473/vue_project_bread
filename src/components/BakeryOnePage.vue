@@ -1,24 +1,27 @@
 <template>
-    <div id="wrap">
+    <div id="wrap" :class="reviewmodal ? 'wrapon' :''" >
         <h1>띄우기</h1>
         <h1>띄우기</h1>
         
         <div id="review_img_zone">
             <div id="review_imgs_box" >
                 <div id="review_imgs" v-for="data of reviewrows" :key="data">
-                    <img :src="data.imageurl" id="review_imgs_one" alt="">
+                    <img :src="data.imageurl" @click="reviewmodal=true;modaldata(data._id)" id="review_imgs_one" alt="">
                 </div>
             </div>
 
             <!-- 리뷰사진 더보기 -->
-            <div id="more_img" @click="reviewmodal=true">
+            <div id="more_img" @click="reviewmodal=true;modaldata(reviewfifth)">
                 더보기
             </div>
         </div>
 
         <!-- 모달영역 -->
         <div v-if="reviewmodal===true" id="modal_box">
-            <div id="modal_inner_box" >
+            <div id="close_btn_box" @click="reviewmodal=false"><el-icon id="close_btn" color="#ffffff" :size="40"><Close /></el-icon></div>
+            <div id="modal_inner_box">
+                <el-icon id="left_btn" @click="prevreview()" color="#ffffff" :size="60"><ArrowLeftBold /></el-icon>
+                <el-icon id="right_btn" @click="nextreview()" color="#ffffff" :size="60"><ArrowRightBold /></el-icon>
                 <div id="modal_left">
                     <div id="big_img" v-if="modalonerows">
                         <img :src="modalonerows.imageurl" id="modal_big_img" alt=""/>
@@ -26,7 +29,7 @@
 
                     <div id="small_img_box">
                         <div v-for="data of reviewrows" :key="data">
-                            <img id="modal_small_img" @click="modaldata(data._id, data.bakery_id)" :src="data.imageurl" alt="">
+                            <img id="modal_small_img" @click="modaldata(data._id)" :src="data.imageurl" alt="">
                         </div>
                     </div>
                 </div>
@@ -81,6 +84,9 @@ export default {
             modalonerows: null,
             page : 1,
             reviewmodal: true, //모달창 출력여부
+            reviewfifth:0, //5번째 리뷰번호(내림차순, 더보기시 실행 용)
+            prev:0, //모달 리뷰 이전번호
+            next:0, //모달 리뷰 이후번호
         });
 
         // 빵집 한개 데이터 수신
@@ -112,22 +118,46 @@ export default {
             }
         };
 
+        // 내림차순 5번째 리뷰번호 받기
+        const reviewdata5th = async() => {
+            const url = `/api/bakeryreview/selectreviewone5.json?`;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+            console.log("리뷰 5번째 번호", data);
+
+            if (data.status === 200) {
+                state.reviewfifth = data.prev5;
+            }
+        }
+
         // 모달창 안 1개 이미지 데이터 수신
-        const modaldata = async(id,bakery_id) => {
-            const url = `/api/bakeryreview/selectreviewone.json?_id=${id}&bakery_id=${bakery_id}`;
+        const modaldata = async(id) => {
+            const url = `/api/bakeryreview/selectreviewone.json?_id=${id}`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
             console.log("모달 창 내 1개 이미지 데이터 확인", data);
 
             if (data.status === 200) {
                 state.modalonerows = data.result;
+                state.prev = data.prev;
+                state.next = data.next;
             }
         };
 
+        // 모달창 안 이전 리뷰 보기
+        const prevreview = () => {
+            modaldata(state.next);
+        };
+
+        // 모달창 안 다음 리뷰 보기
+        const nextreview = () => {
+            modaldata(state.prev);
+        };
+        
         onMounted(()=>{
             handleData();
             reviewdata();
-            
+            reviewdata5th();
         });
 
         return {
@@ -135,6 +165,8 @@ export default {
             state,
             moveReviewWrite,
             modaldata,
+            prevreview,
+            nextreview,
         }
     }
 }
@@ -147,7 +179,12 @@ export default {
 }
 
 #wrap{
-    position:absolute;
+    width:1920px;
+    height:100%;
+}
+
+.wrapon{
+    position:fixed;
 }
 
 #reviewzone{
@@ -159,6 +196,7 @@ export default {
 #review_img{
     width:300px;
     height:300px;
+    object-fit: cover;
 }
 
 #review_img_zone{
@@ -169,6 +207,9 @@ export default {
     position:absolute;
     left:1000px;
     top:0px;
+    width:250px;
+    height:280px;
+    background:yellow;
 }
 
 #review_imgs_box{
@@ -184,63 +225,110 @@ export default {
     float:left;
 }
 
-#more_img{
-    width:250px;
-    height:280px;
-    background:yellow;
-}
-
 /* 모달전체 박스 */
 #modal_box{
     width:100%;
     height:100%;
+    position:fixed;
+    top:0px;
+    left:0px;
+}
+
+/* 모달가상 전체박스 */
+#modal_box::after{
+    width:100%;
+    height:100%;
     position:absolute;
-    top:45px;
-    left:130px;
+    opacity:0.7;
+    background: black;
+    content:"";
+    top:0px;
+    left:0px;
+    z-index:-2;
+}
+
+#close_btn{
+    position:absolute;
+    right:30px;
+    top:30px;
+    cursor:pointer;
+}
+
+#modal_inner_box{
+    width: 1300px;
+    height: 650px;
+    position:absolute;
+    left:50%;
+    margin-left:-650px;
+    top:50px;
+}
+
+#modal_inner_box::after{
+    background-color: black;
+    width: 1300px;
+    height: 650px;
+    content:"";
+    position:absolute;
+    left:0;
+    top:0px;
+    z-index:-1;
+    opacity:0.8;
+}
+
+/* 모달 창 내 왼쪽이동버튼 */
+#left_btn{
+    position:absolute;
+    top:270px;
+    left:180px;
+    cursor: pointer;
+}
+
+/* 모달 창 내 오른쪽이동버튼 */
+#right_btn{
+    position:absolute;
+    top:270px;
+    right:480px;
+    cursor: pointer;
 }
 
 #modal_left{
-    
     width:700px;
     height:650px;    
 }
 
-#modal_inner_box{
-    background-color: yellowgreen;
-    width: 1300px;
-    height: 650px;
-    position:relative;
-}
-
 #small_img_box{
-    width:1000px;
-    height:100px;
-    background:red;
+    width:910px;
+    height:90px;
+    background:black;
     position:absolute;
     bottom:10px;
-    z-index:1;
+    left:40px;
 }
 
 #modal_small_img{
-    width:100px;
-    height:100px;
+    width:90px;
+    height:90px;
     object-fit: cover;
     float:left;
+    margin-left:1px;
 }
 
 #modal_big_img{
     width:400px;
     height:400px;
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    margin: -250px 0 0 -350px;
+    object-fit:cover;
 }
 
 #modal_right{
     background:white;
-    border:2px solid #cccccc;
     position:absolute;
     right:0;
     width:300px;
     height:650px;
-    
-    bottom:0
+    bottom:0;
 }
 </style>
