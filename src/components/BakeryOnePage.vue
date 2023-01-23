@@ -1,48 +1,65 @@
 <template>
-    <div id="wrap" :class="reviewmodal ? 'wrapon' :''" >
+    <div id="wrap" :class="reviewmodal ? 'wrapon' : ''">
         <h1>띄우기</h1>
         <h1>띄우기</h1>
-        
+
         <div id="review_img_zone">
-            <div id="review_imgs_box" >
+            <div id="review_imgs_box">
                 <div id="review_imgs" v-for="data of reviewrows" :key="data">
-                    <img :src="data.imageurl" @click="reviewmodal=true;modaldata(data._id)" id="review_imgs_one" alt="">
+                    <img :src="data.imageurl" @click="reviewmodal = true; modaldata(data._id)" id="review_imgs_one"
+                        alt="">
                 </div>
             </div>
 
             <!-- 리뷰사진 더보기 -->
-            <div id="more_img" @click="reviewmodal=true;modaldata(reviewfifth)">
+            <div id="more_img" @click="reviewmodal = true; modaldata(reviewfifth)">
                 더보기
             </div>
         </div>
 
         <!-- 모달영역 -->
-        <div v-if="reviewmodal===true" id="modal_box">
-            <div id="close_btn_box" @click="reviewmodal=false"><el-icon id="close_btn" color="#ffffff" :size="40"><Close /></el-icon></div>
+        <div v-if="reviewmodal === true" id="modal_box">
+            <div id="close_btn_box" @click="reviewmodal = false"><el-icon id="close_btn" color="#ffffff" :size="40">
+                    <Close />
+                </el-icon></div>
             <div id="modal_inner_box">
-                <el-icon id="left_btn" @click="prevreview()" color="#ffffff" :size="60"><ArrowLeftBold /></el-icon>
-                <el-icon id="right_btn" @click="nextreview()" color="#ffffff" :size="60"><ArrowRightBold /></el-icon>
+                <el-icon id="left_btn" @click="prevreview()" color="#ffffff" :size="60">
+                    <ArrowLeftBold />
+                </el-icon>
+                <el-icon id="right_btn" @click="nextreview()" color="#ffffff" :size="60">
+                    <ArrowRightBold />
+                </el-icon>
+                <el-icon id="bottom_left_btn" @click="modalsmallimgdataprev()" color="#ffffff" :size="25">
+                    <ArrowLeftBold />
+                </el-icon>
+                <el-icon id="bottom_right_btn" @click="modalsmallimgdatanext()" color="#ffffff" :size="25">
+                    <ArrowRightBold />
+                </el-icon>
+
                 <div id="modal_left">
                     <div id="big_img" v-if="modalonerows">
-                        <img :src="modalonerows.imageurl" id="modal_big_img" alt=""/>
+                        <img :src="modalonerows.imageurl" id="modal_big_img" alt="" />
                     </div>
 
-                    <div id="small_img_box">
-                        <div v-for="data of reviewrows" :key="data">
-                            <img id="modal_small_img" @click="modaldata(data._id)" :src="data.imageurl" alt="">
+                    <div id="small_img_box_wrap">
+                        <div id="small_img_box">
+                            <div v-for="(data, index) of smallimgrows" :key="index">
+                                <img class="modal_small_img" @click="modaldata(data._id); highlight($event)"
+                                    :src="data.imageurl" :index="index" alt="">
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div id="modal_right" v-if="modalonerows">
-                    <div>작성자:{{modalonerows.writer  }}</div>
-                    <div>평점:{{modalonerows.point  }}</div>
-                    <div>내용:{{modalonerows.content  }}</div>
-                    <div>작성일:{{modalonerows.regdate1  }}</div>
+                    <div>작성자:{{ modalonerows.writer }}</div>
+                    <div>평점:{{ modalonerows.point }}</div>
+                    <div>내용:{{ modalonerows.content }}</div>
+                    <div>작성일:{{ modalonerows.regdate1 }}</div>
                 </div>
             </div>
         </div>
 
-        
+
         <!-- 리뷰영역 -->
         <div v-if="rows">
             <div>{{ rows.name }}</div>
@@ -72,25 +89,29 @@ import { onMounted, reactive, toRefs } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 export default {
-    setup () {
-        
+    setup() {
+
         const router = useRouter();
         const route = useRoute();
 
         const state = reactive({
-            no : route.query._id,
-            rows : null,
-            reviewrows : null,
+            no: route.query._id,
+            rows: null,
+            reviewrows: null,
             modalonerows: null,
-            page : 1,
+            smallimgrows: null,
+            page: 1,
             reviewmodal: true, //모달창 출력여부
-            reviewfifth:0, //5번째 리뷰번호(내림차순, 더보기시 실행 용)
-            prev:0, //모달 리뷰 이전번호
-            next:0, //모달 리뷰 이후번호
+            reviewfifth: 0, //5번째 리뷰번호(내림차순, 더보기시 실행 용)
+            prev: 0, //모달 리뷰 이전번호
+            next: 0, //모달 리뷰 이후번호
+            count: 0,//모달 > 버튼클릭시 인덱스이동번호
+            total: 0,
+            set : 0,
         });
 
         // 빵집 한개 데이터 수신
-        const handleData = async() => {
+        const handleData = async () => {
             const url = `/api/bakery/bakeryone.json?_id=${state.no}`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
@@ -103,11 +124,11 @@ export default {
 
         // 리뷰쓰기페이지 이동
         const moveReviewWrite = () => {
-            router.push({path:'/bakeryreviewwrite',query:{_id:state.no}});
+            router.push({ path: '/bakeryreviewwrite', query: { _id: state.no } });
         }
 
         // 리뷰 데이터 수신
-        const reviewdata = async() => {
+        const reviewdata = async () => {
             const url = `/api/bakeryreview/selectreview.json?page=${state.page}&bakery_id=${state.no}`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
@@ -119,7 +140,7 @@ export default {
         };
 
         // 내림차순 5번째 리뷰번호 받기
-        const reviewdata5th = async() => {
+        const reviewdata5th = async () => {
             const url = `/api/bakeryreview/selectreviewone5.json?`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
@@ -131,7 +152,7 @@ export default {
         }
 
         // 모달창 안 1개 이미지 데이터 수신
-        const modaldata = async(id) => {
+        const modaldata = async (id) => {
             const url = `/api/bakeryreview/selectreviewone.json?_id=${id}`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
@@ -144,20 +165,117 @@ export default {
             }
         };
 
+        // 모달창 내 스몰이미지 데이터 수신
+        const modalsmallimgdata = async () => {
+            const url = `/api/bakeryreview/selectreviewsmallimg.json?bakery_id=${state.no}&page=${state.page}`;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+            console.log("모달 창 내 스몰이미지데이터 확인", data);
+
+            if (data.status === 200) {
+                state.smallimgrows = data.result;
+                state.total = Math.floor((data.total - 1) / 10) + 1;
+            }
+        };
+
+        //스몰이미지 prev
+        const modalsmallimgdataprev = () => {
+            if (state.page > 1) {
+                state.page -= 1;
+                modalsmallimgdata();
+            } else {
+                modalsmallimgdata();
+            }
+        };
+
+        //스몰이미지 next
+        const modalsmallimgdatanext = () => {
+            if (state.page < state.total) {
+                state.page += 1;
+                modalsmallimgdata();
+            } else {
+                modalsmallimgdata();
+            }
+        };
+
         // 모달창 안 이전 리뷰 보기
         const prevreview = () => {
-            modaldata(state.next);
+            
+            if(state.count > 0){
+                modaldata(state.next);
+                state.count -= 1;
+                highlight(state.count);
+            } else {
+                if(state.set > 0){
+                    state.set--;
+                    state.count = 10;
+                    modalsmallimgdataprev();
+                    prevreview();
+                } else {
+                    return false;
+                }
+
+            }
+            console.log('셋',state.set);
+            console.log('카운트',state.count);
         };
 
         // 모달창 안 다음 리뷰 보기
         const nextreview = () => {
-            modaldata(state.prev);
+            
+            if(state.count < 9){
+                modaldata(state.prev);
+                state.count += 1;
+                highlight(state.count);
+            } else{
+                
+                if(state.set <state.total){
+                    state.set++;
+                    modalsmallimgdatanext();
+                    state.count = -1;
+                    nextreview();
+                    if(state.set===state.total){
+                        state.set--;
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+            console.log('셋',state.set);
+            console.log('카운트',state.count);
         };
-        
-        onMounted(()=>{
+
+        //클릭한 모달이미지 하이라이트 부여
+        const highlight = (e) => {
+            if (typeof e === 'number') {
+                const modal_small_img = document.getElementsByClassName('modal_small_img');
+
+                for (var j = 0; j < modal_small_img.length; j++) {
+                    modal_small_img[j].classList.remove('on');
+                }
+
+                modal_small_img[e].classList.add('on');
+
+
+            } else {
+                e.target.getAttribute('index');
+
+                const modal_small_img = document.getElementsByClassName('modal_small_img');
+
+                for (var i = 0; i < modal_small_img.length; i++) {
+                    modal_small_img[i].classList.remove('on');
+                }
+
+                e.target.classList.add('on');
+            }
+        };
+
+        onMounted(() => {
             handleData();
             reviewdata();
             reviewdata5th();
+            modalsmallimgdata();
         });
 
         return {
@@ -167,168 +285,216 @@ export default {
             modaldata,
             prevreview,
             nextreview,
+            modalsmallimgdatanext,
+            modalsmallimgdataprev,
+            highlight,
         }
     }
 }
 </script>
 
 <style lang="css" scoped>
-*{
-    margin:0;
-    padding:0;
+* {
+    margin: 0;
+    padding: 0;
 }
 
-#wrap{
-    width:1920px;
-    height:100%;
+#wrap {
+    width: 1920px;
+    height: 100%;
 }
 
-.wrapon{
-    position:fixed;
+.wrapon {
+    position: fixed;
 }
 
-#reviewzone{
-    background:#cccccc;
-    width:500px;
-    height:500px;
+#reviewzone {
+    background: #cccccc;
+    width: 500px;
+    height: 500px;
 }
 
-#review_img{
-    width:300px;
-    height:300px;
+#review_img {
+    width: 300px;
+    height: 300px;
     object-fit: cover;
 }
 
-#review_img_zone{
-    position:relative;
+#review_img_zone {
+    position: relative;
 }
 
-#more_img{
-    position:absolute;
-    left:1000px;
-    top:0px;
-    width:250px;
-    height:280px;
-    background:yellow;
+#more_img {
+    position: absolute;
+    left: 1000px;
+    top: 0px;
+    width: 250px;
+    height: 280px;
+    background: yellow;
 }
 
-#review_imgs_box{
-    overflow:hidden;
-    width:1000px;
-    height:280px;
+#review_imgs_box {
+    overflow: hidden;
+    width: 1000px;
+    height: 280px;
 }
 
-#review_imgs_one{
-    width:250px;
-    height:280px;
+#review_imgs_one {
+    width: 250px;
+    height: 280px;
     object-fit: cover;
-    float:left;
+    float: left;
 }
 
 /* 모달전체 박스 */
-#modal_box{
-    width:100%;
-    height:100%;
-    position:fixed;
-    top:0px;
-    left:0px;
+#modal_box {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
 }
 
 /* 모달가상 전체박스 */
-#modal_box::after{
-    width:100%;
-    height:100%;
-    position:absolute;
-    opacity:0.7;
+#modal_box::after {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    opacity: 0.7;
     background: black;
-    content:"";
-    top:0px;
-    left:0px;
-    z-index:-2;
+    content: "";
+    top: 0px;
+    left: 0px;
+    z-index: -2;
 }
 
-#close_btn{
-    position:absolute;
-    right:30px;
-    top:30px;
-    cursor:pointer;
+#close_btn {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    cursor: pointer;
 }
 
-#modal_inner_box{
+#modal_inner_box {
     width: 1300px;
     height: 650px;
-    position:absolute;
-    left:50%;
-    margin-left:-650px;
-    top:50px;
+    position: absolute;
+    left: 50%;
+    margin-left: -650px;
+    top: 50px;
 }
 
-#modal_inner_box::after{
+#modal_inner_box::after {
     background-color: black;
     width: 1300px;
     height: 650px;
-    content:"";
-    position:absolute;
-    left:0;
-    top:0px;
-    z-index:-1;
-    opacity:0.8;
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0px;
+    z-index: -1;
+    opacity: 0.8;
 }
 
 /* 모달 창 내 왼쪽이동버튼 */
-#left_btn{
-    position:absolute;
-    top:270px;
-    left:180px;
+#left_btn {
+    position: absolute;
+    top: 270px;
+    left: 180px;
     cursor: pointer;
 }
 
 /* 모달 창 내 오른쪽이동버튼 */
-#right_btn{
-    position:absolute;
-    top:270px;
-    right:480px;
+#right_btn {
+    position: absolute;
+    top: 270px;
+    right: 480px;
     cursor: pointer;
 }
 
-#modal_left{
-    width:700px;
-    height:650px;    
+#bottom_left_btn {
+    position: absolute;
+    bottom: 42px;
+    left: 15px;
+    cursor: pointer;
 }
 
-#small_img_box{
-    width:910px;
-    height:90px;
-    background:black;
-    position:absolute;
-    bottom:10px;
-    left:40px;
+#bottom_right_btn {
+    position: absolute;
+    bottom: 42px;
+    right: 310px;
+    cursor: pointer;
 }
 
-#modal_small_img{
-    width:90px;
-    height:90px;
+#modal_left {
+    width: 700px;
+    height: 650px;
+}
+
+#small_img_box_wrap {
+    width: 910px;
+    height: 90px;
+    position: absolute;
+    bottom: 10px;
+    left: 45px;
+}
+
+#small_img_box {
+    width: 100%;
+    height: 90px;
+    overflow: hidden;
+}
+
+.modal_small_img {
+    width: 90px;
+    height: 90px;
     object-fit: cover;
-    float:left;
-    margin-left:1px;
+    float: left;
+    margin-left: 1px;
+    position: relative;
+    opacity: 0.5;
+
+    /* 블록선택 막기 */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-#modal_big_img{
-    width:400px;
-    height:400px;
-    position:absolute;
+.on {
+    opacity: 1;
+}
+
+.off {
+    opacity: 0.5;
+}
+
+#modal_big_img {
+    width: 400px;
+    height: 400px;
+    position: absolute;
     top: 50%;
     left: 50%;
     margin: -250px 0 0 -350px;
-    object-fit:cover;
+    object-fit: cover;
+
+    /* 블록선택 막기 */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-#modal_right{
-    background:white;
-    position:absolute;
-    right:0;
-    width:300px;
-    height:650px;
-    bottom:0;
+#modal_right {
+    background: white;
+    position: absolute;
+    right: 0;
+    width: 300px;
+    height: 650px;
+    bottom: 0;
 }
 </style>
