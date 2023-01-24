@@ -5,14 +5,14 @@
 
         <div id="review_img_zone">
             <div id="review_imgs_box">
-                <div id="review_imgs" v-for="data of reviewrows" :key="data">
-                    <img :src="data.imageurl" @click="reviewmodal = true; modaldata(data._id)" id="review_imgs_one"
-                        alt="">
+                <div id="review_imgs" v-for="(data,index) of reviewrows" :key="index">
+                    <img :src="data.imageurl" @click="reviewmodal = true; modaldata(data._id);state.count=index;state.set=0" id="review_imgs_one"
+                        alt="" :index="index">
                 </div>
             </div>
 
             <!-- 리뷰사진 더보기 -->
-            <div id="more_img" @click="reviewmodal = true; modaldata(reviewfifth)">
+            <div id="more_img" @click="reviewmodal = true; modaldata(reviewfifth);state.count=5;state.set=0">
                 더보기
             </div>
         </div>
@@ -211,6 +211,7 @@ export default {
                     state.count = 10;
                     modalsmallimgdataprev();
                     prevreview();
+                    highlight(9);
                 } else {
                     return false;
                 }
@@ -250,6 +251,7 @@ export default {
         const highlight = (e) => {
             if (typeof e === 'number') {
                 const modal_small_img = document.getElementsByClassName('modal_small_img');
+                console.log('이거요',e);
 
                 for (var j = 0; j < modal_small_img.length; j++) {
                     modal_small_img[j].classList.remove('on');
