@@ -50,9 +50,9 @@ export default {
 }
 
 #view{
-  /* position:absolute;
+  position:absolute;
   top:50px;
-  left:50%;
+  /* left:50%;
   margin-left:-782px; */
 }
 
