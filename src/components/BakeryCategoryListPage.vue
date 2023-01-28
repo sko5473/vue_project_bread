@@ -12,17 +12,17 @@
                     <el-button class="area_btn" @click="movearea('동구')">동구</el-button>
                     <el-button class="area_btn" @click="movearea('동래구')">동래구</el-button>
                     <el-button class="area_btn" @click="movearea('금정구')">금정구</el-button>
+                    <el-button class="area_btn" @click="movearea('중구')">중구</el-button>
                 </div>
             </div>
         </div>
         <!-- 내용 -->
-        
+
         <div id="content">
             <!-- 헤더박스 -->
             <div id="header_box">
                 <div id="main_title">{{ state.place }} 제과점 Best50</div>
             </div>
-           
             <div class="one_shop_box" v-for="data of state.rows" :key="data">
                 <div class="img_div">
                     <img class="shop_img" :src="data.imageurl" @click="bakeryonemove(data._id)" alt="" />
@@ -60,6 +60,9 @@ export default {
             marker: null,
             position: null,
             overlay: null,
+            content: null,
+            centerLng: 0,
+            centerLat: 0,
         });
 
         //상점정보 수신
@@ -96,69 +99,91 @@ export default {
 
         // 맵구성정보
         const initMap = () => {
+
+            state.centerLat = state.rows[0].lat; //해당지역으로 검색된 첫번째 lat를 중앙lat로 설정하는 변수에 담는다
+            state.centerLng = state.rows[0].lng; //해당지역으로 검색된 첫번째 lat를 중앙lng로 설정하는 변수에 담는다
+
             const mapContainer = document.getElementById('map'); // 지도를 표시할 div 
             const mapOption = {
-                center: new window.kakao.maps.LatLng(35.1516207, 129.0607662),
-                level: 4,
+                center: new window.kakao.maps.LatLng(state.centerLat, state.centerLng), //지도의 중심좌표
+                level: 4, //지도 확대 레벨
             }
             // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
             const map = new window.kakao.maps.Map(mapContainer, mapOption);
-             
-            // const closeOverlay = () => {
-            //     overlay.setMap(null);
-            // }
 
-            
-            const content = 
-            '<div class="wrap" style="position:relative;background:white;width:250px;height:140px;border:1px solid black; ">' + 
-            '    <div class="left_box" style="position:absolute;left:0;top:0;">' + 
-            '        <div class="img_box" style="width:100px;height:100px;" >' + 
-            '            <img src="" style="width:100%;height:100%;object-fit:cover;z-index:10;"/>' + 
-            '        </div>' + 
-            '    </div>' + 
-            '    <div class="right_box" >' + 
-            '        <div class="title"></div><div class="point"></div>' +
-            '        <div class="s_title"></div>' +
-            '        <div class="right_box_bottom">' + 
-            '            <div class="reviewCount"></div>' + 
-            '            <div class="starCount"></div' + 
-            '        </div>' + 
-            '    </div>' +    
-            '</div>';
+            const overlay = new Array(); //오버레이를 담을 배열 생성
+            const marker = new Array(); // 마커를 담을 배열 생성
 
-            const overlay = new window.kakao.maps.CustomOverlay({
-                    content : content,
-                    map:map,
-                    position:state.position
-            });
+            for (let data of state.rows) { //조회된 데이터 크기만큼 반복
 
+                var position = new window.kakao.maps.LatLng(data.lat, data.lng); //DB에 저장된 위도, 경도 위치값을 담음
 
-            const addMarker = (latitude,longitude) => {
-                var position = new window.kakao.maps.LatLng(latitude,longitude);
-                var marker = new window.kakao.maps.Marker({
-                    map,
-                    position
+                var markers = new window.kakao.maps.Marker({ //마커 생성 및 위치 설정
+                    position: position,
+                    map: map
                 });
 
-                window.kakao.maps.event.addListener(marker, 'click', function () {
-                    console.log(this);
-                    overlay.setPosition(marker.getPosition());
-                    overlay.setMap(map);
+                marker.push(markers); //생성된 마커를 배열에 추가
+
+                var content = //오버레이 내용
+                    "<div class='overlay_wrap' style='position:relative;background:white;width:330px;height:140px;border:1px solid black; '>" +
+                    "    <div class='left_box' style='float:left;'>" +
+                    "        <div class='img_box' style='margin-left:17px;margin-top:17px;width:105px;height:105px;' >" +
+                    "            <img src='" + data.imageurl + "' style='width:100%;height:100%;object-fit:cover;z-index:10;'/>" +
+                    "        </div>" +
+                    "    </div>" +
+                    "    <div class='right_box' style='float:left;margin-left:17px;margin-top:15px;'>" +
+                    "        <div class='title' style='font-family:custom_font2;font-size:22px;'>" + data.name + "</div>"+
+                    "        <div class='s_title' style='font-family:custom_font2;margin-top:3px;font-size:15px;'>" + data.address + "</div>" +
+                    "        <div class='right_box_bottom' style='margin-top:40px;'>" +
+                    "            <div class='reviewCount' style='float:left;'>" + data.hit + "</div>" +
+                    "            <div><img src='@/assets/imgs/star.png'/></div>"+
+                    "            <div class='starCount' style='float:left;'>" + data.bookmarkcount + "</div>" +
+                    "        </div>" +
+                    "    </div>" +
+                    "    <div class='right_box' style='float:left;margin-left:12px;margin-top:8px;'>" +
+                    "        <div class='point' style='font-size:25px;color: rgb(255, 115, 0);'>" + data.point + "</div>" +
+                    "    </div>" +
+                    "</div>";
+
+                var overlays = new window.kakao.maps.CustomOverlay({ //오버레이 생성및 옵션 설정
+                    map: null,
+                    position: null,
+                    content: content,
+                    xAnchor: 0.5,
+                    yAnchor: 1.4,
+                    zIndex: 3,
+                });
+
+                overlay.push(overlays); //오버레이 배열에 추가
+            }
+
+            for(let i=0; i<marker.length; i++){ //마커 클릭시 오버레이 작동
+                window.kakao.maps.event.addListener(marker[i], 'click', function () {
+
+                    for(let j=0; j<marker.length; j++){ //다른 마커 클릭시 오버레이 제거
+                        overlay[j].setMap(null);
+                    }
+
+                    if(overlay[i].Za===false){ //오버레이 위치 값이 없으면 오버레이 포지션 생성
+                        overlay[i].setPosition(marker[i].getPosition());
+                        overlay[i].setMap(map);
+                    } else if(overlay[i].Za===true){ //오버레이 위치 값이 있으면 마커 클릭시 오버레이 포지션 제거
+                        overlay[i].setMap(null);
+                        overlay[i].Za=false; //오버레이 위치 값을 다시 false값을 넣어준다.
+                    }
+                });
+                window.kakao.maps.event.addListener(map, 'click', function () { //지도 클릭시 오버레이 닫힘
+                    overlay[i].setMap(null);
                 });
             }
-
-            for (let data of state.rows) {
-                addMarker(data.lat,data.lng)
-            }
-        };
-
+        }
 
         //맵 설정
         const handleMap = () => {
             let script = document.createElement("script");
             script.setAttribute("src", "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=550fd443d4e078c255532b8398c15133");
-            document.head.appendChild(script);
-            console.log(window);
+            document.body.appendChild(script);
             script.onload = () => {
                 window.kakao.maps.load(initMap); //맵 생성
             }
@@ -306,22 +331,110 @@ export default {
 }
 
 /* 오버레이 css */
-.overlay_wrap {position: absolute;left: 0;bottom: 40px;width: 288px;height: 132px;margin-left: -144px;text-align: left;overflow: hidden;font-size: 12px;font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;line-height: 1.5;}
-    .overlay_wrap * {padding: 0;margin: 0;}
-    .overlay_wrap .info {width: 286px;height: 120px;border-radius: 5px;border-bottom: 2px solid #ccc;border-right: 1px solid #ccc;overflow: hidden;background: #fff;}
-    .overlay_wrap .info:nth-child(1) {border: 0;box-shadow: 0px 1px 2px #888;}
-    .info .title {padding: 5px 0 0 10px;height: 30px;background: #eee;border-bottom: 1px solid #ddd;font-size: 18px;font-weight: bold;}
-    .info .close {position: absolute;top: 10px;right: 10px;color: #888;width: 17px;height: 17px;
-        background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
-    }
-    .info .close:hover {cursor: pointer;}
-    .info .body {position: relative;overflow: hidden;}
-    .info .desc {position: relative;margin: 13px 0 0 90px;height: 75px;}
-    .desc .ellipsis {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
-    .desc .jibun {font-size: 11px;color: #888;margin-top: -2px;}
-    .info .img {position: absolute;top: 6px;left: 5px;width: 73px;height: 71px;border: 1px solid #ddd;color: #888;overflow: hidden;}
-    .info:after {content: '';position: absolute;margin-left: -12px;left: 50%;bottom: 0;width: 22px;height: 12px;
+.overlay_wrap {
+    position: absolute;
+    left: 0;
+    bottom: 40px;
+    width: 288px;
+    height: 132px;
+    margin-left: -144px;
+    text-align: left;
+    overflow: hidden;
+    font-size: 12px;
+    font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+    line-height: 1.5;
+}
+
+.overlay_wrap * {
+    padding: 0;
+    margin: 0;
+}
+
+.overlay_wrap .info {
+    width: 286px;
+    height: 120px;
+    border-radius: 5px;
+    border-bottom: 2px solid #ccc;
+    border-right: 1px solid #ccc;
+    overflow: hidden;
+    background: #fff;
+}
+
+.overlay_wrap .info:nth-child(1) {
+    border: 0;
+    box-shadow: 0px 1px 2px #888;
+}
+
+.info .title {
+    padding: 5px 0 0 10px;
+    height: 30px;
+    background: #eee;
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.info .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #888;
+    width: 17px;
+    height: 17px;
+    background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+}
+
+.info .close:hover {
+    cursor: pointer;
+}
+
+.info .body {
+    position: relative;
+    overflow: hidden;
+}
+
+.info .desc {
+    position: relative;
+    margin: 13px 0 0 90px;
+    height: 75px;
+}
+
+.desc .ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.desc .jibun {
+    font-size: 11px;
+    color: #888;
+    margin-top: -2px;
+}
+
+.info .img {
+    position: absolute;
+    top: 6px;
+    left: 5px;
+    width: 73px;
+    height: 71px;
+    border: 1px solid #ddd;
+    color: #888;
+    overflow: hidden;
+}
+
+.info:after {
+    content: '';
+    position: absolute;
+    margin-left: -12px;
+    left: 50%;
+    bottom: 0;
+    width: 22px;
+    height: 12px;
     background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
-    }
-    .info .link {color: #5085BB;}
+}
+
+.info .link {
+    color: #5085BB;
+}
+
 </style>

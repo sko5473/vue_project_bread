@@ -47,10 +47,10 @@
                             </figure>
                         </li>
                         <li class="module_li">
-                            <img class="module_bread_img" @click="handleContent('남구')" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
+                            <img class="module_bread_img" @click="handleContent('금정구')" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
                             <figure class="module_info">
                                 <div class="inner_info">
-                                    <span class="li_inner_title">남구 제과점 Best50</span>
+                                    <span class="li_inner_title">금정구 제과점 Best50</span>
                                     <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
                                 </div>
                             </figure>
