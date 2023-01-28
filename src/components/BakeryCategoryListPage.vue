@@ -57,13 +57,25 @@ export default {
             map: null,
             total: 0,
             page: 1,
-            marker: null,
-            position: null,
-            overlay: null,
-            content: null,
             centerLng: 0,
             centerLat: 0,
+            iconname:'',
+            starUrl :null,
+            reviewUrl:null,
         });
+
+        //아이콘정보 수신
+        const handleData1 = async () => {
+            const url = `/api/icon/selecticon.json?text=${state.iconname}`;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+            console.log("아이콘 데이터 확인", data);
+
+            if (data.status === 200) {
+                state.starUrl = data.result[0].imageurl;
+                state.reviewUrl = data.result[1].imageurl;
+            }
+        };
 
         //상점정보 수신
         const handleData = async () => {
@@ -136,8 +148,9 @@ export default {
                     "        <div class='title' style='font-family:custom_font2;font-size:22px;'>" + data.name + "</div>"+
                     "        <div class='s_title' style='font-family:custom_font2;margin-top:3px;font-size:15px;'>" + data.address + "</div>" +
                     "        <div class='right_box_bottom' style='margin-top:40px;'>" +
+                    "            <div><img src='"+ state.reviewUrl + "' style='width:10px;height:10px;float:left;'/></div>" +
                     "            <div class='reviewCount' style='float:left;'>" + data.hit + "</div>" +
-                    "            <div><img src='@/assets/imgs/star.png'/></div>"+
+                    "            <div><img src='"+ state.starUrl + "' style='width:10px;height:10px;float:left;'/></div>" +
                     "            <div class='starCount' style='float:left;'>" + data.bookmarkcount + "</div>" +
                     "        </div>" +
                     "    </div>" +
@@ -192,6 +205,7 @@ export default {
         onMounted(() => {
             handleMap();
             handleData();
+            handleData1();
         });
 
         return {
