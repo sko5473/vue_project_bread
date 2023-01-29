@@ -19,7 +19,9 @@ export default {
     height:400px;
     background: rgb(170, 168, 168);
     width:1565px;
+    margin: 0 auto;
 }
+
 #footer{
     color:white;
     font-size:20px;

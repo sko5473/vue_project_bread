@@ -303,7 +303,8 @@ export default {
 
 #wrap {
     width: 1920px;
-    height: 100%;
+    overflow:hidden;
+    margin:0 auto;
 }
 
 .wrapon {

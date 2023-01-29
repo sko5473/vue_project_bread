@@ -7,6 +7,7 @@ import Home from '@/components/HomePage.vue';
 import BakeryCategoryList from '@/components/BakeryCategoryListPage.vue';
 import BakeryOne from '@/components/BakeryOnePage.vue';
 import BakeryReviewWrite from '@/components/BakeryReviewWritePage.vue';
+import Join from '@/components/User/JoinPage.vue';
 
 
 const router = createRouter({
@@ -16,6 +17,7 @@ const router = createRouter({
         {path:'/bakerycategorylist', component:BakeryCategoryList},
         {path:'/bakeryone', component:BakeryOne},
         {path:'/bakeryreviewwrite', component:BakeryReviewWrite},
+        {path:'/join', component:Join},
     ]
 });
 

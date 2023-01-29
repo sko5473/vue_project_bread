@@ -1,34 +1,45 @@
 <template>
-    <div id="wrap">
-        <ul id="leftMenu">
-            <router-link :to="{ path: '/' }">
-                <li id="menuLogo">부산 빵지순례</li>
-            </router-link>
-            
-        </ul>
-        <ul id="rightMenu">
-            <router-link :to="{ path: '/introduce' }">
-                <li class="menuLi">소개</li>
-            </router-link>
-            <router-link :to="{ path: '/cs' }">
-                <li class="menuLi">고객센터</li>
-            </router-link>
-            <li>
-                <el-input type="text" placeholder="지역, 식당을 검색하세요." style="width:250px;" />
-                <el-button id="searchBtn" type="success" round>검색</el-button>
-            </li>
-            <li id="userProfile">
-                <img id="userProfile_img" @click="handleModal()" src="../assets/imgs/userprofile.png" alt="유저프로필" >
-                <ul id="userProfileBox" v-if="state.on === true">
-                    <li>로그인</li>
-                    <li>로그아웃</li>
-                    <li>회원가입</li>
-                    <li>나의정보</li>
-                    <li>관리자페이지</li>
+    <nav id="menuWrap" class="navbar navbar-expand-lg bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand logo" href="/">부산 빵지순례</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 middleMenuUl">
+                    <li class="nav-item">
+                        <a class="nav-link active menus" aria-current="page" href="#">소개</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active menus" aria-current="page" href="#">고객센터</a>
+                    </li>
                 </ul>
-            </li>
-        </ul>
-    </div>
+                <form class="d-flex searchForm" role="search">
+                    <input class="form-control me-2 searchInput" type="search" placeholder="지역명, 가게명을 검색해보세요."
+                        aria-label="Search">
+                    <button class="btn btn-outline-success searchBtn" type="submit">검색</button>
+                </form>
+                <li class="nav-item dropdown userProfile">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <img src="../assets/imgs/userprofile.png" alt="" id="userImg">
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">로그인</a></li>
+                        <li><a class="dropdown-item" href="#">로그아웃</a></li>
+                        <li><a class="dropdown-item" href="/join">회원가입</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">나의정보</a></li>
+                        <li><a class="dropdown-item" href="#">관리자페이지</a></li>
+                    </ul>
+                </li>
+            </div>
+        </div>
+    </nav>
 </template>
 
 <script>
@@ -39,15 +50,15 @@ export default {
 
         //프로필 모달창
         const state = reactive({
-            on : false,
+            on: false,
         });
 
         //프로필 클릭시 모달창 조작
         const handleModal = () => {
-            if(state.on===false){
-                state.on=true;
-            } else{
-                state.on=false;
+            if (state.on === false) {
+                state.on = true;
+            } else {
+                state.on = false;
             }
         };
 
@@ -60,23 +71,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-
-#wrap {
-    height: 50px;
-    line-height: 50px;
-    width:1565px;
-    border-bottom:2px solid #cccccc;
-    background-color: whitesmoke;
-}
-
-ul, li {
-    float: left;
-}
-
-a {
-    color: black;
-}
-
 @font-face {
     font-family: 'custom_font';
     src: url(../assets/fonts/EF_watermelonSalad\(윈도우용TTF\).ttf);
@@ -84,56 +78,43 @@ a {
     font-style: normal;
 }
 
-#menuLogo {
-    font-size: 30px;
-    font-family: custom_font;
+/* 메뉴페이지 부모 nav */
+#menuWrap{
+    width:1565px;
+    margin:0 auto;
 }
 
-.menuLi {
-    font-family: custom_font;
+.logo {
+    font-family: 'custom_font';
 }
 
-#leftMenu {
-    position: absolute;
-    left: 10px;
+.middleMenuUl {
+    margin-left:380px;
 }
 
-#rightMenu {
-    position: absolute;
-    right: 10px;
+.menus {
+    font-family: 'custom_font2';
+    margin-left:50px;
 }
 
-#rightMenu li {
-    margin-left: 70px;
+/* 검색영역*/
+.searchForm {
+    margin-right: 50px;
 }
 
-#userProfile {
-    position: relative;
+.searchInput {
+    width: 500px;
 }
 
-#userProfile_img {
-    width: 30px;
-    position: absolute;
-    bottom: -40px;
-    right: 5px;
-    cursor: pointer;
+.searchBtn {
+    width: 100px;
 }
 
-#userProfileBox{
-    width:85px;
-    height:auto;
-    background:rgb(144, 179, 209);
-    z-index:2;
-    position: absolute;
-    bottom:-195px;
-    left:-90px;
+.userProfile{
+    margin-right:10px;
 }
 
-#userProfileBox li{
-    color:white;
-    font-size:12px;
-    margin-left: 5px;
-    line-height:30px;
-    cursor: pointer;
+#userImg{
+    width:30px;
 }
 </style>

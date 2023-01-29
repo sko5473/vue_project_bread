@@ -34,9 +34,6 @@
                 </div>
             </div>
         </div>
-        <div class="box" style="padding: 20px;">
-            <div class="pull">말풍선3</div>
-        </div>
         <div id="pagination_box">
             <el-pagination background layout="prev, pager, next" :total="state.total" @current-change="handlePage" />
         </div>
@@ -159,7 +156,7 @@ export default {
                     "            <div class='starCount' style='float:left;color:#888'>" + data.bookmarkcount + "</div>" +
                     "        </div>" +
                     "    </div>" +
-                    "    <div class='right_box' style='float:left;margin-left:12px;margin-top:8px;'>" +
+                    "    <div class='right_box' style='float:left;margin-top:10px;'>" +
                     "        <div class='point' style='font-size:25px;color: rgb(255, 115, 0);'>" + data.point + "</div>" +
                     "    </div>" +
                     "</div>";
@@ -186,7 +183,6 @@ export default {
                     if(overlay[i].Za===false){ //오버레이 위치 값이 없으면 오버레이 포지션 생성
                         overlay[i].setPosition(marker[i].getPosition());
                         overlay[i].setMap(map);
-                        console.log(overlay[i]);
                     } else if(overlay[i].Za===true){ //오버레이 위치 값이 있으면 마커 클릭시 오버레이 포지션 제거
                         overlay[i].setMap(null);
                         overlay[i].Za=false; //오버레이 위치 값을 다시 false값을 넣어준다.
@@ -240,12 +236,10 @@ export default {
     font-style: normal;
 }
 
-.pull {position:relative; margin: 50px; padding: 20px; width:200px; height:60px; color: #FFF; border-radius: 10px; background-color: #000;}
-.pull:after {content:""; position: absolute; right: 100px; top: 100px; border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 30px solid #22ac38;}
-
 #wrap {
     width: 1565px;
     position: relative;
+    margin:0 auto;
 }
 
 /* 왼쪽 바 네비게이터 */
