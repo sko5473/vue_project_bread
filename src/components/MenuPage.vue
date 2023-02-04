@@ -27,7 +27,7 @@
                         <img src="../assets/imgs/userprofile.png" alt="" id="userImg">
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">로그인</a></li>
+                        <li><a class="dropdown-item" href="/login">로그인</a></li>
                         <li><a class="dropdown-item" href="#">로그아웃</a></li>
                         <li><a class="dropdown-item" href="/join">회원가입</a></li>
                         <li>
