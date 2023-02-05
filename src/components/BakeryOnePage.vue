@@ -101,7 +101,7 @@ export default {
             modalonerows: null,
             smallimgrows: null,
             page: 1,
-            reviewmodal: true, //모달창 출력여부
+            reviewmodal: false, //모달창 출력여부
             reviewfifth: 0, //5번째 리뷰번호(내림차순, 더보기시 실행 용)
             prev: 0, //모달 리뷰 이전번호
             next: 0, //모달 리뷰 이후번호

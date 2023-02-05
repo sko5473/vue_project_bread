@@ -2,9 +2,17 @@
     <div id="join_wrap">
         <h3>회원가입 페이지</h3>
 
-        <div class="field">
-            <label for="id" class="lbl">아이디</label>
-            <el-input type="text" v-model="state.userid" ref="userid" style="width:20%;" />
+        <div id="email_box" class="field">
+            <label for="" class="lbl" style="float:left;">이메일</label>
+            <el-input type="email" ref="email" v-model="state.usermail" style="width:20%;float:left;" />
+            <p style="float:left;margin-left:10px;margin-right:10px;"> @ </p>
+            <select class="form-select" v-model="state.usermail1" aria-label="Default select example"
+                style="width:20%;height:32px;font-size:15px;padding-bottom:1px;padding-top:1px;">
+                <option class="options" selected>이메일 선택</option>
+                <option class="options" value="naver.com">naver.com</option>
+                <option class="options" value="gmail.com">gmail.com</option>
+                <option class="options" value="daum.net">daum.net</option>
+            </select>
         </div>
 
         <div class="field">
@@ -15,6 +23,11 @@
         <div class="field">
             <label for="password1" class="lbl">패스워드 확인</label>
             <el-input type="password" ref="password1" v-model="state.password1" style="width:20%;" />
+        </div>
+
+        <div class="field">
+            <label for="username" class="lbl">이름</label>
+            <el-input type="text" v-model="state.username" ref="name" style="width:20%;" />
         </div>
 
         <div class="field">
@@ -44,19 +57,6 @@
             </div>
         </div>
 
-        <div id="email_box" class="field">
-            <label for="" class="lbl" style="float:left;">이메일</label>
-            <el-input type="email" ref="email" v-model="state.usermail" style="width:20%;float:left;" />
-            <p style="float:left;margin-left:10px;margin-right:10px;"> @ </p>
-            <select class="form-select" v-model="state.usermail1" aria-label="Default select example"
-                style="width:20%;height:32px;font-size:15px;padding-bottom:1px;padding-top:1px;">
-                <option class="options" selected>이메일 선택</option>
-                <option class="options" value="naver.com">naver.com</option>
-                <option class="options" value="gmail.com">gmail.com</option>
-                <option class="options" value="daum.net">daum.net</option>
-            </select>
-        </div>
-
         <div class="field">
             <label for="" class="lbl"></label>
             <el-button @click="handleJoin()" type="success">회원가입</el-button>
@@ -76,7 +76,6 @@ export default {
         const router = useRouter();
 
         const state = reactive({
-            userid: '',
             password: '',
             password1: '',
             gender: '',
@@ -85,6 +84,7 @@ export default {
             postcode: '',
             address: '',
             detailaddress: '',
+            username: '',
         });
 
         const sample6_execDaumPostcode = () => {
@@ -139,7 +139,7 @@ export default {
             }).open();
         }
 
-        const userid = ref();
+        const name = ref();
         const password = ref();
         const password1 = ref();
         const email = ref();
@@ -149,9 +149,9 @@ export default {
         //회원가입
         const handleJoin = async () => {
 
-            if (state.userid === '') {
-                alert('아이디를 입력하세요.');
-                userid.value.focus();
+            if (state.email === '') {
+                alert('email 입력하세요.');
+                email.value.focus();
                 return false;
             }
             if (state.password === '') {
@@ -164,9 +164,9 @@ export default {
                 password1.value.focus();
                 return false;
             }
-            if (state.email === '') {
-                alert('email 입력하세요.');
-                email.value.focus();
+            if (state.username === '') {
+                alert('이름을 입력하세요.');
+                name.value.focus();
                 return false;
             }
             if (state.address === '') {
@@ -188,11 +188,11 @@ export default {
             const url = `/api/user/insertuser.json`;
             const headers = { "Content-Type": "application/json" };
             const body = {
-                id: state.userid,
+                email: `${state.usermail}@${state.usermail1}`,
                 password: state.password,
+                name: state.username,
                 address: state.address,
                 detailaddress: state.detailaddress,
-                email: `${state.usermail}@${state.usermail1}`,
                 gender: state.gender,
             }
 
@@ -217,12 +217,13 @@ export default {
             state,
             sample6_execDaumPostcode,
             handleJoin,
-            userid,
             password,
             password1,
             email,
+            name,
             address,
             detailaddress,
+            
             
         }
     }

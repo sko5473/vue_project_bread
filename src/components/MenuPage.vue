@@ -26,15 +26,17 @@
                         aria-expanded="false">
                         <img src="../assets/imgs/userprofile.png" alt="" id="userImg">
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/login">로그인</a></li>
-                        <li><a class="dropdown-item" href="#">로그아웃</a></li>
-                        <li><a class="dropdown-item" href="/join">회원가입</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="/login" v-if="isLogin === false">로그인</a></li>
+                        <li><a class="dropdown-item" @click="logout()" v-if="isLogin === true">로그아웃</a></li>
+                        <li><a class="dropdown-item" href="/join" v-if="isLogin === false">회원가입</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#">나의정보</a></li>
-                        <li><a class="dropdown-item" href="#">관리자페이지</a></li>
+                        <li><a class="dropdown-item" href="#" v-if="isLogin === true">나의정보</a></li>
+                        <li><a class="dropdown-item" href="#" >관리자페이지</a></li>
+                        <!-- <li><a class="dropdown-item" href="#" v-if="userInfo.isadmin==='Y'">관리자페이지</a></li> -->
+                        {{ userInfo }}
                     </ul>
                 </li>
             </div>
@@ -43,16 +45,24 @@
 </template>
 
 <script>
-import { reactive } from 'vue';
+import axios from 'axios';
+import { reactive, computed } from 'vue';
+import { useStore } from 'vuex';
 
 export default {
     setup() {
+
+        const store = useStore();
 
         //프로필 모달창
         const state = reactive({
             on: false,
         });
 
+        // vuex로부터 isLogin값을 받아온다.
+        const isLogin = computed(()=> store.state.isLogin);
+        const userInfo = computed(() => store.state.userInfo);
+        console.log('유저인포',userInfo);
         //프로필 클릭시 모달창 조작
         const handleModal = () => {
             if (state.on === false) {
@@ -62,9 +72,22 @@ export default {
             }
         };
 
+        //로그아웃
+        const logout = () => {
+            const url = `/api/user/logout.json`;
+            const headers = { "Content-Type": "application/json" };
+            const body = {};
+            axios.delete(url, { headers: headers, data: body });
+
+            store.commit("logout")
+        }
+
         return {
             state,
             handleModal,
+            logout,
+            isLogin,
+            userInfo,
         }
     }
 }
@@ -79,9 +102,9 @@ export default {
 }
 
 /* 메뉴페이지 부모 nav */
-#menuWrap{
-    width:1565px;
-    margin:0 auto;
+#menuWrap {
+    width: 1565px;
+    margin: 0 auto;
 }
 
 .logo {
@@ -89,12 +112,12 @@ export default {
 }
 
 .middleMenuUl {
-    margin-left:380px;
+    margin-left: 380px;
 }
 
 .menus {
     font-family: 'custom_font2';
-    margin-left:50px;
+    margin-left: 50px;
 }
 
 /* 검색영역*/
@@ -110,11 +133,11 @@ export default {
     width: 100px;
 }
 
-.userProfile{
-    margin-right:10px;
+.userProfile {
+    margin-right: 10px;
 }
 
-#userImg{
-    width:30px;
+#userImg {
+    width: 30px;
 }
 </style>
