@@ -15,7 +15,6 @@
         <div>
             <button @click="handleLogin()">로그인</button>
         </div>
-        {{ state }}
         {{ isLogin }}
         {{ userInfo }}
     </div>
@@ -38,9 +37,10 @@ export default {
                 loginEmail: "",
                 loginPw: "",
             },
+            isLogin:"",
         });
         
-        const isLogin = computed(() => store.state.isLogin);
+        state.isLogin = computed(() => store.state.isLogin);
         const userInfo = computed(() => store.state.userInfo);
 
         //로그인
@@ -57,15 +57,17 @@ export default {
             if (data.status === 200) {
                 alert('로그인 성공');
                 // router.push({ path: '/' });
-                store.dispatch("login", data);
+                store.dispatch("login", data); //로그인성공시 vuex의 login메서드를 실행한다.
             } else {
                 state.form.loginPw = "";
             }
         }
+
+        
         return {
             state,
             handleLogin,
-            isLogin,
+            // isLogin,
             userInfo
         }
     }

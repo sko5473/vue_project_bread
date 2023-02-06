@@ -34,9 +34,8 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li><a class="dropdown-item" href="#" v-if="isLogin === true">나의정보</a></li>
-                        <li><a class="dropdown-item" href="#" >관리자페이지</a></li>
-                        <!-- <li><a class="dropdown-item" href="#" v-if="userInfo.isadmin==='Y'">관리자페이지</a></li> -->
-                        {{ userInfo }}
+                        <!-- <li><a class="dropdown-item" href="#">관리자페이지</a></li> -->
+                        <li><a class="dropdown-item" href="#" v-if="isAdmin === true">관리자페이지</a></li>
                     </ul>
                 </li>
             </div>
@@ -60,9 +59,10 @@ export default {
         });
 
         // vuex로부터 isLogin값을 받아온다.
-        const isLogin = computed(()=> store.state.isLogin);
-        const userInfo = computed(() => store.state.userInfo);
-        console.log('유저인포',userInfo);
+        const isLogin = computed(()=> store.state.isLogin); //로그인유무 vuex에서 가져온다.
+        const userInfo = computed(() => store.state.userInfo); //유저 데이터 vuex에서 가져온다.
+        const isAdmin = computed(() => store.state.isAdmin); //관리자유무 vuex에서 가져온다.
+
         //프로필 클릭시 모달창 조작
         const handleModal = () => {
             if (state.on === false) {
@@ -88,6 +88,7 @@ export default {
             logout,
             isLogin,
             userInfo,
+            isAdmin,
         }
     }
 }

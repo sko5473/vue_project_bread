@@ -1,27 +1,43 @@
 // import router from "@/router";
 import { createStore } from "vuex";
+// import VueCookies from 'vue-cookies';
+import axios from "axios";
 
 export default createStore({
     state: {
         isLogin: false,
         userInfo: null,
+        isAdmin: false,
     },
     getters: {},
     mutations: {
         //로그인 성공
-        loginSuccess(state, payload){
+        loginSuccess(state, payload) {
             state.isLogin = true
             state.userInfo = payload
+            state.isAdmin = payload.isadmin
         },
-        
-        logout(state){ //로그아웃
+
+        logout(state) { //로그아웃
             state.isLogin = false
             state.userInfo = null
+            state.isAdmin = false
         }
     },
+
     actions: {
-        login({ commit}, data){
+        login({ commit, dispatch }, data) {
             commit("loginSuccess", data)
+            dispatch("getMemberInfo")
+        },
+        getMemberInfo({ commit }) {
+
+            //페이지 새로고침시 토큰 유효성 확인
+            const headers = { "Content-Type": "application/json" }
+            axios.get(`/api/user/auth`, { headers })
+                 .then(response =>
+                    commit("loginSuccess", response.data)
+                )
         }
     }
 });
