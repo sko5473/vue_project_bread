@@ -36,6 +36,7 @@
                         <li><a class="dropdown-item" href="#" v-if="isLogin === true">나의정보</a></li>
                         <!-- <li><a class="dropdown-item" href="#">관리자페이지</a></li> -->
                         <li><a class="dropdown-item" href="#" v-if="isAdmin === true">관리자페이지</a></li>
+                        {{ isLogin }}{{ userInfo }}
                     </ul>
                 </li>
             </div>

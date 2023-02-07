@@ -35,8 +35,11 @@ export default createStore({
             //페이지 새로고침시 토큰 유효성 확인
             const headers = { "Content-Type": "application/json" }
             axios.get(`/api/user/auth`, { headers })
-                 .then(response =>
-                    commit("loginSuccess", response.data)
+                 .then(response =>{
+                    if(response.data.isAuth !== false){
+                        commit("loginSuccess", response.data)
+                    }
+                }
                 )
         }
     }
