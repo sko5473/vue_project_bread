@@ -25,11 +25,11 @@
 import axios from 'axios';
 import {useStore} from 'vuex';
 import { reactive, computed } from 'vue';
-// import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 export default {
     setup() {
-        // const router = useRouter();
+        const router = useRouter();
         const store = useStore();
         
         const state = reactive({
@@ -56,7 +56,7 @@ export default {
 
             if (data.status === 200) {
                 alert('로그인 성공');
-                // router.push({ path: '/' });
+                router.push({ path: '/' });
                 store.dispatch("login", data); //로그인성공시 vuex의 login메서드를 실행한다.
             } else {
                 state.form.loginPw = "";
@@ -67,7 +67,6 @@ export default {
         return {
             state,
             handleLogin,
-            // isLogin,
             userInfo
         }
     }

@@ -7,7 +7,7 @@ export default createStore({
     state: {
         isLogin: false,
         userInfo: null,
-        isAdmin: false,
+        isAdmin: false
     },
     getters: {},
     mutations: {
@@ -39,8 +39,7 @@ export default createStore({
                     if(response.data.isAuth !== false){
                         commit("loginSuccess", response.data)
                     }
-                }
-                )
+                })
         }
     }
 });

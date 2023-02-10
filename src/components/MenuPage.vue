@@ -16,11 +16,10 @@
                         <a class="nav-link active menus" aria-current="page" href="#">고객센터</a>
                     </li>
                 </ul>
-                <form class="d-flex searchForm" role="search">
-                    <input class="form-control me-2 searchInput" type="search" placeholder="지역명, 가게명을 검색해보세요."
+                    <input class="form-control me-2 searchInput" type="search" v-model="state.keyword"
+                    @keyup.enter="search(state.keyword)" placeholder="지역명, 가게명을 검색해보세요."
                         aria-label="Search">
-                    <button class="btn btn-outline-success searchBtn" type="submit">검색</button>
-                </form>
+                    <button class="btn btn-outline-success searchBtn" @click="search(state.keyword)" type="submit">검색</button>
                 <li class="nav-item dropdown userProfile">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -33,10 +32,8 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#" v-if="isLogin === true">나의정보</a></li>
-                        <!-- <li><a class="dropdown-item" href="#">관리자페이지</a></li> -->
+                        <li><a class="dropdown-item" href="/mypage" v-if="isLogin === true">나의정보</a></li>
                         <li><a class="dropdown-item" href="#" v-if="isAdmin === true">관리자페이지</a></li>
-                        {{ isLogin }}{{ userInfo }}
                     </ul>
                 </li>
             </div>
@@ -47,17 +44,22 @@
 <script>
 import axios from 'axios';
 import { reactive, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
 export default {
     setup() {
 
+        const router = useRouter();
         const store = useStore();
 
         //프로필 모달창
         const state = reactive({
             on: false,
+            keyword: "",
         });
+
+        state.text = computed(() => store.state.place);
 
         // vuex로부터 isLogin값을 받아온다.
         const isLogin = computed(()=> store.state.isLogin); //로그인유무 vuex에서 가져온다.
@@ -79,8 +81,13 @@ export default {
             const headers = { "Content-Type": "application/json" };
             const body = {};
             axios.delete(url, { headers: headers, data: body });
-
+            
             store.commit("logout")
+        }
+        
+        //검색로직
+        const search = (keyword) => {
+            router.push({ path:'/bakerycategorylist', query: {page:1, text : keyword}});
         }
 
         return {
@@ -90,6 +97,7 @@ export default {
             isLogin,
             userInfo,
             isAdmin,
+            search,
         }
     }
 }
@@ -137,6 +145,7 @@ export default {
 
 .userProfile {
     margin-right: 10px;
+    margin-left:20px;
 }
 
 #userImg {

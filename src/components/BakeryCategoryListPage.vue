@@ -44,10 +44,9 @@
 import { onMounted, reactive } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
-
+import { watch } from '@vue/runtime-core';
 export default {
     setup() {
-
         const router = useRouter();
         const route = useRoute();
 
@@ -64,6 +63,15 @@ export default {
             reviewUrl:null,
         });
 
+        watch(
+           () => route,
+           ()=>{
+                state.place=route.query.text;
+                handleData();
+                handleMap();
+           },
+           {deep:true}
+        );
         //아이콘정보 수신
         const handleData1 = async () => {
             const url = `/api/icon/selecticon.json?text=${state.iconname}`;
@@ -103,6 +111,7 @@ export default {
             handleMap();
         };
 
+        //페이지네이션
         const handlePage = (page) => {
             state.page = page;
             handleData();
@@ -139,8 +148,8 @@ export default {
 
                 var content = //오버레이 내용
                     "<div class='overlay_wrap' style='position:relative;background:white;width:330px;height:140px;border:1px solid black; '>" +
-                    "<div class='overlay_wrap_after' style='position:absolute;border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 30px solid white;top:140px;right:150px; '></div>" +
-                    "<div class='overlay_wrap_after1' style='position:absolute;border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 30px solid black;top:141px;right:150px;z-index:-1; '></div>" +
+                    "<div class='overlay_wrap_after' style='position:absolute;border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 30px solid white;top:137px;right:150px; '></div>" +
+                    "<div class='overlay_wrap_after1' style='position:absolute;border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 30px solid black;top:138px;right:150px;z-index:-1; '></div>" +
                     "    <div class='left_box' style='float:left;'>" +
                     "        <div class='img_box' style='margin-left:17px;margin-top:17px;width:105px;height:105px;' >" +
                     "            <img src='" + data.imageurl + "' style='width:100%;height:100%;object-fit:cover;'/>" +
@@ -149,14 +158,14 @@ export default {
                     "    <div class='middle_box' style='float:left;margin-left:17px;margin-top:16px;width:100px;'>" +
                     "        <div class='title' style='font-family:custom_font2;font-size:22px;'>" + data.name + "</div>"+
                     "        <div class='s_title' style='font-family:custom_font2;margin-top:3px;font-size:15px;'>" + data.address + "</div>" +
-                    "        <div class='middle_bottom' style='z-index:1;margin-top:45px;'>" +
+                    "        <div class='middle_bottom' style='z-index:1;margin-top:30px;'>" +
                     "            <div><img src='"+ state.reviewUrl + "' style='width:15px;height:15px;float:left;margin-top:3px;opacity:0.7;'/></div>" +
                     "            <div class='reviewCount' style='float:left;color:#888'>" + data.hit + "</div>" +
                     "            <div><img src='"+ state.starUrl + "' style='width:15px;height:15px;float:left;margin-top:3px;margin-left:7px;opacity:0.5'/></div>" +
                     "            <div class='starCount' style='float:left;color:#888'>" + data.bookmarkcount + "</div>" +
                     "        </div>" +
                     "    </div>" +
-                    "    <div class='right_box' style='float:left;margin-top:10px;'>" +
+                    "    <div class='right_box' style='float:left;margin-top:13px;'>" +
                     "        <div class='point' style='font-size:25px;color: rgb(255, 115, 0);'>" + data.point + "</div>" +
                     "    </div>" +
                     "</div>";
