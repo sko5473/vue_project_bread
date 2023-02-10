@@ -13,7 +13,7 @@
                         <a class="nav-link active menus" aria-current="page" href="#">소개</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active menus" aria-current="page" href="#">고객센터</a>
+                        <a class="nav-link active menus" aria-current="page" href="/cs">고객센터</a>
                     </li>
                 </ul>
                     <input class="form-control me-2 searchInput" type="search" v-model="state.keyword"
@@ -34,6 +34,7 @@
                         </li>
                         <li><a class="dropdown-item" href="/mypage" v-if="isLogin === true">나의정보</a></li>
                         <li><a class="dropdown-item" href="#" v-if="isAdmin === true">관리자페이지</a></li>
+                        {{ userInfo }}
                     </ul>
                 </li>
             </div>
