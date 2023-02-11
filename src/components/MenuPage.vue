@@ -84,6 +84,8 @@ export default {
             axios.delete(url, { headers: headers, data: body });
             
             store.commit("logout")
+
+            router.push({ path:'/'});
         }
         
         //검색로직

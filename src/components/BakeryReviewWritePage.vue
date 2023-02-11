@@ -77,14 +77,24 @@ export default {
 
             if (data.status === 200) {
                 alert('저장되었습니다.');
+                updatereviewcount();
                 router.push({path:'/bakeryone',query:{_id:state.no}});
             }
         }
+
+        //상점별 리뷰수 업데이트(리뷰 저장시 실행)
+        const updatereviewcount = async() => {
+            const url = `/api/bakery/updatereviewcount.json?_id=${state.no}`;
+            const headers = { "Content-Type": "application/json" };
+            const body = {};
+            await axios.put(url, body, { headers });
+        };
 
         return {
             state,
             handleFile,
             reviewsave,
+            updatereviewcount,
         }
     }
 }

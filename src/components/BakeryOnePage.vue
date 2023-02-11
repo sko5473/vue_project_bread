@@ -1,18 +1,16 @@
 <template>
     <div id="wrap" :class="reviewmodal ? 'wrapon' : ''">
-        <h1>띄우기</h1>
-        <h1>띄우기</h1>
-
         <div id="review_img_zone">
             <div id="review_imgs_box">
-                <div id="review_imgs" v-for="(data,index) of reviewrows" :key="index">
-                    <img :src="data.imageurl" @click="reviewmodal = true; modaldata(data._id);state.count=index;state.set=0" id="review_imgs_one"
-                        alt="" :index="index">
+                <div id="review_imgs" v-for="(data, index) of reviewrows" :key="index">
+                    <img :src="data.imageurl"
+                        @click="reviewmodal = true; modaldata(data._id); state.count = index; state.set = 0"
+                        id="review_imgs_one" alt="" :index="index">
                 </div>
             </div>
 
             <!-- 리뷰사진 더보기 -->
-            <div id="more_img" @click="reviewmodal = true; modaldata(reviewfifth);state.count=5;state.set=0">
+            <div id="more_img" @click="reviewmodal = true; modaldata(reviewfifth); state.count = 5; state.set = 0">
                 더보기
             </div>
         </div>
@@ -58,20 +56,32 @@
                 </div>
             </div>
         </div>
-
-
-        <!-- 리뷰영역 -->
-        <div v-if="rows">
-            <div>{{ rows.name }}</div>
-            <div>{{ rows.address }}</div>
-            <div>{{ rows.menu }}</div>
-            <div>{{ rows.price }}</div>
-            <div>{{ rows.strength }}</div>
-            <div>{{ rows.holiday }}</div>
+        <div style="float:left;margin-left:20px;"><el-button @click="moveReviewWrite()">리뷰쓰기</el-button></div>
+        <div style="margin-left:50px;opacity:0.7;" v-if="isbookmark === false">
+            <img src="@/assets/imgs/star.png" style="width:25px;" @click="updateStar()" /> 즐겨찾기
+        </div>
+        <div style="margin-left:50px;opacity:0.7;" v-if="isbookmark === true">
+            <img src="@/assets/imgs/yellowstar.png" style="width:25px;" @click="deleteStar()" /> 즐겨찾기
         </div>
 
-        <div><button @click="moveReviewWrite()">리뷰쓰기</button></div>
+        <br />
+        <!-- 본문 -->
+        <div v-if="rows">
+            <div style="float:left;"><img src="@/assets/imgs/writing.png" style="width:30px;" />{{ rows.reviewcount }}
+            </div>
+            <div style="margin-left:50px;opacity:0.7;"><img src="@/assets/imgs/star.png" style="width:25px;" />{{
+                rows.bookmarkcount
+            }}</div>
+            <br />
+            <div>가게명 : {{ rows.name }}</div>
+            <div>주소 : {{ rows.address }}</div>
+            <div>메뉴 : {{ rows.menu }}</div>
+            <div>가격 : {{ rows.price }}</div>
+            <div>강점 : {{ rows.strength }}</div>
+            <div>휴일 : {{ rows.holiday }}</div>
+        </div>
 
+        <!-- 리뷰영역 -->
         <div id="reviewzone" v-for="data of reviewrows" :key="data">
             <h3>리뷰영역</h3>
             <div>작성일:{{ data.regdate1 }}</div>
@@ -85,12 +95,14 @@
 
 <script>
 import axios from 'axios';
-import { onMounted, reactive, toRefs } from 'vue';
+import { onMounted, reactive, toRefs, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 export default {
     setup() {
 
+        const store = useStore();
         const router = useRouter();
         const route = useRoute();
 
@@ -107,20 +119,90 @@ export default {
             next: 0, //모달 리뷰 이후번호
             count: 0,//모달 > 버튼클릭시 인덱스이동번호
             total: 0,
-            set : 0,
+            set: 0,
+            isbookmark: false, //북마크 여부
+            userInfo: null,
         });
+
+        state.userInfo = computed(() => store.state.userInfo);
 
         // 빵집 한개 데이터 수신
         const handleData = async () => {
             const url = `/api/bakery/bakeryone.json?_id=${state.no}`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
-            console.log("빵집 1개 데이터 확인", data);
 
             if (data.status === 200) {
                 state.rows = data.result;
             }
         };
+
+        //새로고침시 나의 즐겨찾기에 해당 상점이 있는지 조회후 있으면 노란별, 없으면 빈별 표시
+        const selectmybookmark = async () => {
+            const url = `/api/mybookmark/selectmybookmark.json?_id=${state.no}`;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+            console.log("북마크목록에 있는지 확인", data);
+
+            if (data.status === 200) {
+                if (data.result.length > 0) {
+                    state.isbookmark = true //나의북마크에 해당상점 데이터 있으면 노란스타
+                } else {
+                    state.isbookmark = false //없으면 빈스타
+                }
+            }
+        };
+
+        //즐겨찾기버튼 클릭시 해당 상점 즐겨찾기 카운트 1증가
+        const updateStar = async () => {
+            const url = `/api/bakery/updatebookmarkcountup.json?_id=${state.no}`;
+            const headers = { "Content-Type": "application/json" };
+            const body = {};
+            const { data } = await axios.put(url, body, { headers });
+            if (data.status === 200) {
+                updateStarContent();
+            }
+        }
+
+        //나의 즐겨찾기에 추가 /api/mybookmark/insertbookmark.json
+        const updateStarContent = async () => {
+            const url = `/api/mybookmark/insertbookmark.json`;
+            const headers = { "Content-Type": "application/json" };
+            const body = new FormData();
+            body.append("bakerynum", state.no);
+            body.append("name", state.rows.name);
+            body.append("email", state.userInfo.email);
+            body.append("address", state.rows.address);
+            const { data } = await axios.post(url, body, { headers });
+            console.log("나의즐겨찾기 저장", data);
+
+            if (data.status === 200) {
+                state.isbookmark = true
+            }
+        }
+
+        //노란즐겨찾기 클릭시 해당 상점 즐겨찾기 카운트 1감소
+        const deleteStar = async() => {
+            const url = `/api/bakery/updatebookmarkcountdown.json?_id=${state.no}`;
+            const headers = { "Content-Type": "application/json" };
+            const body = {};
+            const { data } = await axios.put(url, body, { headers });
+            if (data.status === 200) {
+                deleteStarContent();
+            }
+        };
+
+        
+        //나의 즐겨찾기에서 삭제
+        const deleteStarContent = async () => {
+            const url = `/api/mybookmark/deletemybookmark.json?_id=${state.no}`;
+            const headers = { "Content-Type": "application/json" };
+            const body = {};
+            const { data } = await axios.delete(url, body, { headers });
+            if (data.status === 200) {
+                state.isbookmark = false
+            }
+        }
 
         // 리뷰쓰기페이지 이동
         const moveReviewWrite = () => {
@@ -132,7 +214,6 @@ export default {
             const url = `/api/bakeryreview/selectreview.json?page=${state.page}&bakery_id=${state.no}`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
-            console.log("리뷰 1개 데이터 확인", data);
 
             if (data.status === 200) {
                 state.reviewrows = data.result;
@@ -144,7 +225,6 @@ export default {
             const url = `/api/bakeryreview/selectreviewone5.json?`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
-            console.log("리뷰 5번째 번호", data);
 
             if (data.status === 200) {
                 state.reviewfifth = data.prev5;
@@ -156,7 +236,6 @@ export default {
             const url = `/api/bakeryreview/selectreviewone.json?_id=${id}`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
-            console.log("모달 창 내 1개 이미지 데이터 확인", data);
 
             if (data.status === 200) {
                 state.modalonerows = data.result;
@@ -170,7 +249,6 @@ export default {
             const url = `/api/bakeryreview/selectreviewsmallimg.json?bakery_id=${state.no}&page=${state.page}`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
-            console.log("모달 창 내 스몰이미지데이터 확인", data);
 
             if (data.status === 200) {
                 state.smallimgrows = data.result;
@@ -200,13 +278,13 @@ export default {
 
         // 모달창 안 이전 리뷰 보기
         const prevreview = () => {
-            
-            if(state.count > 0){
+
+            if (state.count > 0) {
                 modaldata(state.next);
                 state.count -= 1;
                 highlight(state.count);
             } else {
-                if(state.set > 0){
+                if (state.set > 0) {
                     state.set--;
                     state.count = 10;
                     modalsmallimgdataprev();
@@ -217,25 +295,25 @@ export default {
                 }
 
             }
-            console.log('셋',state.set);
-            console.log('카운트',state.count);
+            console.log('셋', state.set);
+            console.log('카운트', state.count);
         };
 
         // 모달창 안 다음 리뷰 보기
         const nextreview = () => {
-            
-            if(state.count < 9){
+
+            if (state.count < 9) {
                 modaldata(state.prev);
                 state.count += 1;
                 highlight(state.count);
-            } else{
-                
-                if(state.set <state.total){
+            } else {
+
+                if (state.set < state.total) {
                     state.set++;
                     modalsmallimgdatanext();
                     state.count = -1;
                     nextreview();
-                    if(state.set===state.total){
+                    if (state.set === state.total) {
                         state.set--;
                         return false;
                     }
@@ -243,15 +321,15 @@ export default {
                     return false;
                 }
             }
-            console.log('셋',state.set);
-            console.log('카운트',state.count);
+            console.log('셋', state.set);
+            console.log('카운트', state.count);
         };
 
         //클릭한 모달이미지 하이라이트 부여
         const highlight = (e) => {
             if (typeof e === 'number') {
                 const modal_small_img = document.getElementsByClassName('modal_small_img');
-                console.log('이거요',e);
+                console.log('이거요', e);
 
                 for (var j = 0; j < modal_small_img.length; j++) {
                     modal_small_img[j].classList.remove('on');
@@ -278,6 +356,7 @@ export default {
             reviewdata();
             reviewdata5th();
             modalsmallimgdata();
+            selectmybookmark();
         });
 
         return {
@@ -290,6 +369,8 @@ export default {
             modalsmallimgdatanext,
             modalsmallimgdataprev,
             highlight,
+            updateStar,
+            deleteStar,
         }
     }
 }
@@ -303,8 +384,8 @@ export default {
 
 #wrap {
     width: 1920px;
-    overflow:hidden;
-    margin:0 auto;
+    overflow: hidden;
+    margin: 0 auto;
 }
 
 .wrapon {

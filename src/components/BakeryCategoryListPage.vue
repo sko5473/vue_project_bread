@@ -45,6 +45,7 @@ import { onMounted, reactive } from 'vue';
 import axios from 'axios';
 import { useRoute, useRouter } from 'vue-router';
 import { watch } from '@vue/runtime-core';
+
 export default {
     setup() {
         const router = useRouter();
@@ -63,6 +64,7 @@ export default {
             reviewUrl:null,
         });
 
+        //route변경을 감지해서 변경시 맵과 데이터를 새로 불러온다.
         watch(
            () => route,
            ()=>{
@@ -72,6 +74,7 @@ export default {
            },
            {deep:true}
         );
+
         //아이콘정보 수신
         const handleData1 = async () => {
             const url = `/api/icon/selecticon.json?text=${state.iconname}`;
@@ -160,7 +163,7 @@ export default {
                     "        <div class='s_title' style='font-family:custom_font2;margin-top:3px;font-size:15px;'>" + data.address + "</div>" +
                     "        <div class='middle_bottom' style='z-index:1;margin-top:30px;'>" +
                     "            <div><img src='"+ state.reviewUrl + "' style='width:15px;height:15px;float:left;margin-top:3px;opacity:0.7;'/></div>" +
-                    "            <div class='reviewCount' style='float:left;color:#888'>" + data.hit + "</div>" +
+                    "            <div class='reviewCount' style='float:left;color:#888'>" + data.reviewcount + "</div>" +
                     "            <div><img src='"+ state.starUrl + "' style='width:15px;height:15px;float:left;margin-top:3px;margin-left:7px;opacity:0.5'/></div>" +
                     "            <div class='starCount' style='float:left;color:#888'>" + data.bookmarkcount + "</div>" +
                     "        </div>" +
