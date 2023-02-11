@@ -46,8 +46,7 @@
                     </div>
                     <div class="myinf_right">
                         <div class="myinf_con">
-                            <img :src="state.image" id="profileImg" alt="">
-                            <input type="file" v-on:change="handleImage($event)" />
+                            <img :src="state.image" class="profileImg" alt="">
                         </div>
                     </div>
                 </div>
@@ -70,7 +69,9 @@
                             <p class="myinf_con_p">{{ state.userInfo.gender }}</p>
                         </div>
                         <div class="field">
-                            <label for="address" class="myinf_lbl">주소</label><br/>
+                            <label for="address" class="myinf_lbl">주소</label>
+                            <p style="float:left;margin-left:20px;" class="myinf_con_p">{{ state.userInfo.address }}</p>
+                            <p>{{ state.userInfo.detailaddress }}</p>
                             <div style="margin-top:10px;">
                                 <el-input type="text" id="sample6_postcode" v-model="state.postcode" style="width:200px;"
                                     placeholder="우편번호"></el-input>
@@ -101,7 +102,7 @@
                     </div>
                     <div class="myinf_right">
                         <div class="myinf_con">
-                            <img :src="state.image" id="profileImg" alt="">
+                            <img :src="state.image" class="profileImg" alt="">
                             <input type="file" v-on:change="handleImage($event)" />
                         </div>
                     </div>
@@ -120,15 +121,18 @@
 import axios from 'axios';
 import { reactive, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 export default {
     setup() {
         const store = useStore();
 
+        const router = useRouter();
+        
         const state = reactive({
             mynum: 1, //메뉴별 번호
             files: null,
-            image: require('@/assets/imgs/defaultprofile.jpg'),
+            image: null,
             postcode: '',
             address: '',
             detailaddress: '',
@@ -137,6 +141,14 @@ export default {
             userInfo: null,
         });
        
+        const imagestate = () => {
+            if(state.userInfo.imageurl !== null){
+                state.image = state.userInfo.imageurl;
+            } else {
+                state.image = require('@/assets/imgs/defaultprofile.jpg');
+            }
+        };
+
         state.userInfo = computed(() => store.state.userInfo);
 
         const handleImage = (e) => {
@@ -163,10 +175,10 @@ export default {
             const { data } = await axios.put(url, body, { headers });
             console.log('유저정보 수정', data);
 
-            // if (data.status === 200) {
-            //     alert('가입되었습니다.');
-            //     router.push({ path: '/login' });
-            // }
+            if (data.status === 200) {
+                alert('수정되었습니다.');
+                router.push({ path: '/mypage' });
+            }
         }
 
         const sample6_execDaumPostcode = () => {
@@ -226,7 +238,7 @@ export default {
             let script = document.createElement('script');
             script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
             document.head.appendChild(script);
-            console.log(window);
+            imagestate();
         });
 
         return {
@@ -293,7 +305,7 @@ export default {
     line-height: 30px;
 }
 
-#profileImg {
-    width: 100px;
+.profileImg {
+    width: 200px;
 }
 </style>

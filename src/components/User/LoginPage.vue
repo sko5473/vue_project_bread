@@ -1,29 +1,31 @@
 <template>
-    <div>
-        <div v-if="isLogin===true">
-            <h1>헬로우</h1>
-        </div>
+    <div id="login_wrap">
+        <h2>로그인</h2>
         <div>
-            <label for="loginEmail">E-mail</label>
-            <input type="text" v-model="state.form.loginEmail">
+            <label for="loginEmail" class="lbl">E-mail</label>
+            <el-input type="text" v-model="state.form.loginEmail" class="login_input" placeholder="이메일을 입력하세요." />
         </div>
 
+        <br />
+        <br />
         <div>
-            <label for="loginPw">PW</label>
-            <input type="password" v-model="state.form.loginPw">
+            <label for="loginPw" class="lbl">패스워드</label>
+            <el-input type="password" v-model="state.form.loginPw" class="login_input" placeholder="패스워드를 입력하세요." />
         </div>
+        <br>
+        <br>
         <div>
-            <button @click="handleLogin()">로그인</button>
+            <label for="button" class="lbl">&nbsp;</label>
+            <el-button @click="handleLogin()" style="font-size:20px;">로그인</el-button>
         </div>
         {{ isLogin }}
         {{ userInfo }}
     </div>
-
 </template>
 
 <script>
 import axios from 'axios';
-import {useStore} from 'vuex';
+import { useStore } from 'vuex';
 import { reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -31,15 +33,15 @@ export default {
     setup() {
         const router = useRouter();
         const store = useStore();
-        
+
         const state = reactive({
             form: {
                 loginEmail: "",
                 loginPw: "",
             },
-            isLogin:"",
+            isLogin: "",
         });
-        
+
         state.isLogin = computed(() => store.state.isLogin);
         const userInfo = computed(() => store.state.userInfo);
 
@@ -63,7 +65,6 @@ export default {
             }
         }
 
-        
         return {
             state,
             handleLogin,
@@ -74,5 +75,23 @@ export default {
 </script>
 
 <style lang="css" scoped>
+#login_wrap {
+    width: 1440px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding-left:450px;
+    padding-top:100px;
+    padding-bottom:200px;
+}
 
+.lbl {
+    width: 100px;
+    float: left;
+    text-align: center;
+}
+
+.login_input {
+    float: left;
+    width: 500px;
+}
 </style>
