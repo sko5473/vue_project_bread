@@ -28,6 +28,6 @@ export default {
 
 <style lang="css" scoped>
 #footer{
-  margin-top:300px;
+  margin-top:500px;
 }
 </style>

@@ -10,7 +10,7 @@
         <br />
         <div>
             <label for="loginPw" class="lbl">패스워드</label>
-            <el-input type="password" v-model="state.form.loginPw" class="login_input" placeholder="패스워드를 입력하세요." />
+            <el-input type="password" @keyup.enter="handleLogin()" v-model="state.form.loginPw" class="login_input" placeholder="패스워드를 입력하세요." />
         </div>
         <br>
         <br>

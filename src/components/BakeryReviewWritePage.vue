@@ -1,12 +1,6 @@
 <template>
     <div>
-        <h3>리뷰쓰기</h3>
-        <h3>리뷰쓰기</h3>
-
-        <div>
-            <label for="writer">작성자</label>
-            <input type="text" v-model="state.writer"/>
-        </div>
+        <h3>리뷰 작성</h3>
 
         <div>
             <label for="point">평점</label>
@@ -27,18 +21,19 @@
         <div id="thumnail_box">
             <img id="review_img" :src="state.img" alt="이미지"/>
         </div>
-
     </div>
 </template>
 
 <script>
 import axios from 'axios';
-import { reactive } from 'vue';
+import { reactive, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 export default {
     setup() {
 
+        const store = useStore();
         const router = useRouter();
         const route = useRoute();
 
@@ -47,13 +42,14 @@ export default {
             content: null,
             file: null,
             img: require('../assets/imgs/noimage.gif'),
-            no : route.query._id,
-            writer : '',
+            no: route.query._id,
+            userInfo: null,
         });
+
+        state.userInfo = computed(() => store.state.userInfo);
 
         //리뷰 이미지 파일관리
         const handleFile = (e) => {
-            console.log('파일', e);
             if (e.target.files.length > 0) {
                 state.file = e.target.files[0];
                 state.img = URL.createObjectURL(state.file);
@@ -68,7 +64,7 @@ export default {
             const url = `/api/bakeryreview/insertshopreview.json?_id=${state.no}`;
             const headers = { "Content-Type": "multipart/form-data" };
             const body = new FormData();
-            body.append("writer",state.writer);
+            body.append("writer",state.userInfo.email);
             body.append("point",state.point);
             body.append("content",state.content);
             body.append("file",state.file);
@@ -77,10 +73,22 @@ export default {
 
             if (data.status === 200) {
                 alert('저장되었습니다.');
-                updatereviewcount();
+                updatereviewcount(); //상점리뷰수+1
+                userupdatereviewcount(); //유저리뷰카운트 실행
                 router.push({path:'/bakeryone',query:{_id:state.no}});
             }
         }
+
+        //유저 리뷰카운트 업데이트
+        const userupdatereviewcount = async() => {
+            const url = `/api/user/userupdatereviewcount.json`;
+            const headers = { "Content-Type": "application/json" };
+            const body = new FormData();
+            body.append("email", state.userInfo.email);
+            body.append("bakery_id", Number(state.no));
+            const {data} = await axios.put(url, body, { headers });
+            console.log('유저 리뷰카운트 업데이트', data);
+        };
 
         //상점별 리뷰수 업데이트(리뷰 저장시 실행)
         const updatereviewcount = async() => {
@@ -95,6 +103,7 @@ export default {
             handleFile,
             reviewsave,
             updatereviewcount,
+            userupdatereviewcount,
         }
     }
 }

@@ -10,7 +10,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 middleMenuUl">
                     <li class="nav-item">
-                        <a class="nav-link active menus" aria-current="page" href="#">소개</a>
+                        <a class="nav-link active menus" aria-current="page" href="/introduce">소개</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active menus" aria-current="page" href="/cs">고객센터</a>
@@ -124,7 +124,7 @@ export default {
 }
 
 .middleMenuUl {
-    margin-left: 380px;
+    margin-left: 420px;
 }
 
 .menus {
