@@ -1,10 +1,10 @@
 <template>
     <div id="join_wrap">
-        <h3>회원가입 페이지</h3>
+        <h3>회원가입</h3>
 
         <div id="email_box" class="field">
             <label for="" class="lbl" style="float:left;">이메일</label>
-            <el-input type="email" ref="email" v-model="state.usermail" style="width:20%;float:left;" />
+            <el-input type="email" ref="email" v-model="state.usermail" style="width:20%;float:left;" placeholder="이메일 입력"/>
             <p style="float:left;margin-left:10px;margin-right:10px;"> @ </p>
             <select class="form-select" v-model="state.usermail1" aria-label="Default select example"
                 style="width:20%;height:32px;font-size:15px;padding-bottom:1px;padding-top:1px;">
@@ -17,17 +17,17 @@
 
         <div class="field">
             <label for="password" class="lbl">패스워드</label>
-            <el-input type="password" ref="password" v-model="state.password" style="width:20%;" />
+            <el-input type="password" ref="password" v-model="state.password" style="width:20%;"  placeholder="비밀번호 입력"/>
         </div>
 
         <div class="field">
             <label for="password1" class="lbl">패스워드 확인</label>
-            <el-input type="password" ref="password1" v-model="state.password1" style="width:20%;" />
+            <el-input type="password" ref="password1" v-model="state.password1" style="width:20%;"  placeholder="비밀번호 확인 입력"/>
         </div>
 
         <div class="field">
             <label for="username" class="lbl">이름</label>
-            <el-input type="text" v-model="state.username" ref="name" style="width:20%;" />
+            <el-input type="text" v-model="state.username" ref="name" style="width:20%;"  placeholder="이름 입력"/>
         </div>
 
         <div class="field">
@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <div class="field">
+        <div class="field" style="margin-bottom:100px;">
             <label for="" class="lbl"></label>
             <el-button @click="handleJoin()" type="success">회원가입</el-button>
         </div>
@@ -234,6 +234,7 @@ export default {
 #join_wrap {
     margin: 0 auto;
     width: 1440px;
+    overflow: hidden;
 }
 
 .field {

@@ -23,7 +23,8 @@
                 <li class="nav-item dropdown userProfile">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        <img src="../assets/imgs/userprofile.png" alt="" id="userImg">
+                        <img src="../assets/imgs/userprofile.png" v-if="isLogin === false" alt="" class="userImg">
+                        <img :src="userInfo.imageurl" v-if="isLogin === true" alt="" class="userImg">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/login" v-if="isLogin === false">로그인</a></li>
@@ -33,7 +34,7 @@
                             <hr class="dropdown-divider">
                         </li>
                         <li><a class="dropdown-item" href="/mypage" v-if="isLogin === true">나의정보</a></li>
-                        <li><a class="dropdown-item" href="#" v-if="isAdmin === true">관리자페이지</a></li>
+                        <li><a class="dropdown-item" href="/admin" v-if="isAdmin === true">관리자페이지</a></li>
                         {{ userInfo }}
                     </ul>
                 </li>
@@ -59,8 +60,6 @@ export default {
             on: false,
             keyword: "",
         });
-
-        state.text = computed(() => store.state.place);
 
         // vuex로부터 isLogin값을 받아온다.
         const isLogin = computed(()=> store.state.isLogin); //로그인유무 vuex에서 가져온다.
@@ -151,7 +150,7 @@ export default {
     margin-left:20px;
 }
 
-#userImg {
+.userImg {
     width: 30px;
 }
 </style>

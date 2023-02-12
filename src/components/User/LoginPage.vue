@@ -1,6 +1,6 @@
 <template>
     <div id="login_wrap">
-        <h2>로그인</h2>
+        
         <div>
             <label for="loginEmail" class="lbl">E-mail</label>
             <el-input type="text" v-model="state.form.loginEmail" class="login_input" placeholder="이메일을 입력하세요." />
@@ -16,7 +16,7 @@
         <br>
         <div>
             <label for="button" class="lbl">&nbsp;</label>
-            <el-button @click="handleLogin()" style="font-size:20px;">로그인</el-button>
+            <el-button @click="handleLogin()" style="width:500px;font-size:20px;background-color: goldenrod;color:white;">로그인</el-button>
         </div>
         {{ isLogin }}
         {{ userInfo }}

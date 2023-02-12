@@ -2,7 +2,7 @@
     <div id="wrap">
         <div id="left_bar">
             <!-- 카카오맵 -->
-            <div id="map" style="width:100%;height:600px;"></div>
+            <div id="map"></div>
 
             <div id="inner_box">
                 <div id="move_area_title">지역별 빵 맛집 리스트 바로가기</div>
@@ -11,8 +11,8 @@
                     <el-button class="area_btn" @click="movearea('부산진구')">부산진구</el-button>
                     <el-button class="area_btn" @click="movearea('동구')">동구</el-button>
                     <el-button class="area_btn" @click="movearea('동래구')">동래구</el-button>
-                    <el-button class="area_btn" @click="movearea('금정구')">금정구</el-button>
-                    <el-button class="area_btn" @click="movearea('중구')">중구</el-button>
+                    <el-button class="area_btn" @click="movearea('금정구')">금정구</el-button><br>
+                    <el-button class="area_btn" @click="movearea('중구')" style="margin-top:10px;">중구</el-button>
                 </div>
             </div>
         </div>
@@ -252,17 +252,22 @@ export default {
     width: 1565px;
     position: relative;
     margin:0 auto;
+    margin-bottom: 100px;
 }
 
 /* 왼쪽 바 네비게이터 */
 #left_bar {
     width: 500px;
+    height:100%;
     background: rgb(236, 184, 142);
     position: absolute;
     left: 0;
 }
 
-#map {}
+#map {
+    width:100%;
+    height:600px;
+}
 
 /* 지역별 빵 맛집 리스트 바로가기 박스 */
 #inner_box {
