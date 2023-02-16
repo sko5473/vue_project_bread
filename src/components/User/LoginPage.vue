@@ -16,10 +16,13 @@
         <br>
         <div>
             <label for="button" class="lbl">&nbsp;</label>
-            <el-button @click="handleLogin()" style="width:500px;font-size:20px;background-color: goldenrod;color:white;">로그인</el-button>
+            <el-button @click="handleLogin()" id="loginBtn">로그인</el-button>
         </div>
         {{ isLogin }}
         {{ userInfo }}
+        <GoogleLogin :callback="callback" />
+            <!-- <el-button id="googleLoginBtn"><img src="@/assets/imgs/google.png" id="googleImg"/>Login Using Google</el-button>
+        </GoogleLogin> -->
     </div>
 </template>
 
@@ -28,6 +31,7 @@ import axios from 'axios';
 import { useStore } from 'vuex';
 import { reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { decodeCredential } from 'vue3-google-login'
 
 export default {
     setup() {
@@ -65,10 +69,18 @@ export default {
             }
         }
 
+        //구글 로그인 로그
+        const callback = (response) => {
+            // console.log("Handle the response", response)
+            const userData = decodeCredential(response.credential);
+            console.log("Handle the userData", userData);
+        }
+
         return {
             state,
             handleLogin,
-            userInfo
+            userInfo,
+            callback,
         }
     }
 }
@@ -93,5 +105,23 @@ export default {
 .login_input {
     float: left;
     width: 500px;
+}
+
+#loginBtn{
+    width:500px;
+    font-size:20px;
+    background-color: goldenrod;
+    color:white;
+}
+
+#googleLoginBtn{
+    margin-left: 100px;
+    width:500px;
+    margin-top:20px;
+}
+
+#googleImg{
+    width:20px;
+    margin-right:20px;
 }
 </style>

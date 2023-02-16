@@ -18,6 +18,7 @@
     "vue": "^3.2.13",
     "vue-cookies": "^1.8.2",
     "vue-router": "^4.1.6",
+    "vue3-google-login": "^2.0.14",
     "vueperslides": "^3.5.1",
     "vuex": "^4.1.0"
   },

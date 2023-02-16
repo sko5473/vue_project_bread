@@ -2,6 +2,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
+//google login
+import vue3GoogleLogin from 'vue3-google-login'
+
 // element-plus
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
@@ -23,6 +26,9 @@ const app = createApp({
   }
 });
 
+app.use(vue3GoogleLogin,{
+  clientId: '315617641406-vkqe3t80f1o40d5lcp3pnssa7s7saebl.apps.googleusercontent.com'
+});
 app.use(routes);
 app.use(stores);
 app.use(ElementPlus);
