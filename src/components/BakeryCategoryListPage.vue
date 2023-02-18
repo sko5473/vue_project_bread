@@ -119,7 +119,7 @@ export default {
             state.page = page;
             handleData();
             handleMap();
-        }
+        };
 
         // 맵구성정보
         const initMap = () => {

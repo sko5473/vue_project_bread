@@ -59,28 +59,10 @@ export default {
             }
         };
 
+
         //리뷰 저장
         const reviewsave = async() => {
-            const url = `/api/bakeryreview/insertshopreview.json?_id=${state.no}`;
-            const headers = { "Content-Type": "multipart/form-data" };
-            const body = new FormData();
-            body.append("writer",state.userInfo.email);
-            body.append("point",state.point);
-            body.append("content",state.content);
-            body.append("file",state.file);
-            const { data } = await axios.post(url, body, { headers });
-            console.log("리뷰저장 데이터 확인", data);
-
-            if (data.status === 200) {
-                alert('저장되었습니다.');
-                updatereviewcount(); //상점리뷰수+1
-                userupdatereviewcount(); //유저리뷰카운트 실행
-                router.push({path:'/bakeryone',query:{_id:state.no}});
-            }
-        }
-
-        //유저 리뷰카운트 업데이트
-        const userupdatereviewcount = async() => {
+            //저장 로직 실행 되기전 유저 인증리뷰 체크 먼저
             const url = `/api/user/userupdatereviewcount.json`;
             const headers = { "Content-Type": "application/json" };
             const body = new FormData();
@@ -88,6 +70,26 @@ export default {
             body.append("bakery_id", Number(state.no));
             const {data} = await axios.put(url, body, { headers });
             console.log('유저 리뷰카운트 업데이트', data);
+
+            if (data.status === 200) {
+                // 인증로직 검증 후 리뷰 저장 로직 실행
+                const url = `/api/bakeryreview/insertshopreview.json?_id=${state.no}`;
+                const headers = { "Content-Type": "multipart/form-data" };
+                const body = new FormData();
+                body.append("writer",state.userInfo.email);
+                body.append("point",state.point);
+                body.append("content",state.content);
+                body.append("file",state.file);
+                const { data } = await axios.post(url, body, { headers });
+                console.log("리뷰저장 데이터 확인", data);
+                if (data.status === 200) {
+                    alert('저장되었습니다.');
+                    updatereviewcount(); //상점 리뷰 수+1
+                    router.push({path:'/bakeryone',query:{_id:state.no}});
+                }
+
+            }
+
         };
 
         //상점별 리뷰수 업데이트(리뷰 저장시 실행)
@@ -103,7 +105,6 @@ export default {
             handleFile,
             reviewsave,
             updatereviewcount,
-            userupdatereviewcount,
         }
     }
 }

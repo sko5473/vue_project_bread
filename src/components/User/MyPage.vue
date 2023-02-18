@@ -40,9 +40,8 @@
                         </div>
                         <div>
                             <label for="" class="myinf_lbl" style="width:190px;float:left;">인증리뷰 수/인증상점 수</label>
-                            <p style="float:left;margin-left:20px;">{{ state.userInfo.certreveiwcount }}상점/{{
-                                state.totalshopcount
-                            }}상점</p>
+                            <p style="float:left;margin-left:20px;">{{ state.userInfo.certreveiwcount }}상점/
+                            {{state.totalshopcount}}상점</p>
                             <div class="progress" style="width:400px;float:left;">
                                 <div class="progress-bar progress-bar-striped bg-info" role="progressbar"
                                     aria-label="Example with label" style="width: 50%;" aria-valuenow="25"
