@@ -1,6 +1,6 @@
 <template>
     <div id="login_wrap">
-        
+
         <div>
             <label for="loginEmail" class="lbl">E-mail</label>
             <el-input type="text" v-model="state.form.loginEmail" class="login_input" placeholder="이메일을 입력하세요." />
@@ -10,7 +10,8 @@
         <br />
         <div>
             <label for="loginPw" class="lbl">패스워드</label>
-            <el-input type="password" @keyup.enter="handleLogin()" v-model="state.form.loginPw" class="login_input" placeholder="패스워드를 입력하세요." />
+            <el-input type="password" @keyup.enter="handleLogin()" v-model="state.form.loginPw" class="login_input"
+                placeholder="패스워드를 입력하세요." />
         </div>
         <br>
         <br>
@@ -20,9 +21,9 @@
         </div>
         {{ isLogin }}
         {{ userInfo }}
-        <GoogleLogin :callback="callback" />
-            <!-- <el-button id="googleLoginBtn"><img src="@/assets/imgs/google.png" id="googleImg"/>Login Using Google</el-button>
-        </GoogleLogin> -->
+        <GoogleLogin :callback="callback" id="googlelogin"/>
+        <!-- <el-button id="googleLoginBtn"><img src="@/assets/imgs/google.png" id="googleImg"/>Login Using Google</el-button>
+            </GoogleLogin> -->
     </div>
 </template>
 
@@ -49,6 +50,7 @@ export default {
         state.isLogin = computed(() => store.state.isLogin);
         const userInfo = computed(() => store.state.userInfo);
 
+
         //로그인
         const handleLogin = async () => {
             const url = `/api/user/login.json`;
@@ -70,10 +72,50 @@ export default {
         }
 
         //구글 로그인 로그
-        const callback = (response) => {
-            // console.log("Handle the response", response)
+        const callback = async(response) => {
             const userData = decodeCredential(response.credential);
             console.log("Handle the userData", userData);
+
+            const url = `/api/user/googlelogin.json`;
+            const headers = { "Content-Type": "application/json" };
+            const body = {
+                email: userData.email,
+            }
+            const {data} = await axios.post(url, body, { headers });
+            console.log('구글로그인시회원db에저장되어있는지확인', data);
+
+            if (data.status === 200) {
+                alert('로그인 성공');
+                router.push({ path: '/' });
+                store.dispatch("login", data); //로그인성공시 vuex의 login메서드를 실행한다.
+            } else {
+                if(confirm('최초 한번 회원가입이 필요합니다. \'예\'를 누르면 아이디가 자동생성됩니다.')){
+                    const url = `/api/user/insertuser.json`;
+                    const headers = { "Content-Type": "application/json" };
+                    const body = {
+                        email: userData.email,
+                        name: userData.name,
+                        password: '123'
+                    }
+
+                    const { data } = await axios.post(url, body, { headers });
+                    console.log('회원가입', data);
+
+                    if (data.status === 200) {
+                        alert('가입되었습니다.');
+                        router.push({ path: '/login' });
+                    }
+                }
+                router.push({ path: '/login' });
+            }
+            
+            // userData.imageurl= userData.picture;
+            // delete userData.picture;
+            
+            // userData.isGoogleLogin = "true";
+
+            // store.commit("loginSuccess",userData);
+
         }
 
         return {
@@ -91,9 +133,9 @@ export default {
     width: 1440px;
     margin: 0 auto;
     overflow: hidden;
-    padding-left:450px;
-    padding-top:100px;
-    padding-bottom:200px;
+    padding-left: 450px;
+    padding-top: 100px;
+    padding-bottom: 200px;
 }
 
 .lbl {
@@ -107,21 +149,26 @@ export default {
     width: 500px;
 }
 
-#loginBtn{
-    width:500px;
-    font-size:20px;
+#loginBtn {
+    width: 500px;
+    font-size: 20px;
     background-color: goldenrod;
-    color:white;
+    color: white;
 }
 
-#googleLoginBtn{
+#googleLoginBtn {
     margin-left: 100px;
-    width:500px;
-    margin-top:20px;
+    width: 500px;
+    margin-top: 20px;
 }
 
-#googleImg{
-    width:20px;
-    margin-right:20px;
+#googleImg {
+    width: 20px;
+    margin-right: 20px;
+}
+
+#googlelogin{
+    margin-left:100px;
+    margin-top:20px;
 }
 </style>

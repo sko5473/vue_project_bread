@@ -29,7 +29,6 @@
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="/login" v-if="isLogin === false">로그인</a></li>
                         <li><a class="dropdown-item" @click="logout()" v-if="isLogin === true">로그아웃</a></li>
-                        <li><a class="dropdown-item" @click="googleLogoutF()">구글로그아웃</a></li>
                         <li><a class="dropdown-item" href="/join" v-if="isLogin === false">회원가입</a></li>
                         <li>
                             <hr class="dropdown-divider">
@@ -49,7 +48,6 @@ import axios from 'axios';
 import { reactive, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { googleLogout } from "vue3-google-login"
 
 export default {
     setup() {
@@ -89,11 +87,6 @@ export default {
             router.push({ path:'/'});
         }
     
-        const googleLogoutF = () => {
-            googleLogout();
-            store.commit("logout");
-        };
-
         //검색로직
         const search = (keyword) => {
             router.push({ path:'/bakerycategorylist', query: {page:1, text : keyword}});
@@ -107,7 +100,6 @@ export default {
             userInfo,
             isAdmin,
             search,
-            googleLogoutF
         }
     }
 }
