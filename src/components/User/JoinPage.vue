@@ -4,7 +4,7 @@
 
         <div id="email_box" class="field">
             <label for="" class="lbl" style="float:left;">이메일</label>
-            <el-input type="email" ref="email" v-model="state.usermail" style="width:20%;float:left;" placeholder="이메일 입력"/>
+            <el-input type="email" ref="email" v-model="state.usermail" style="width:20%;float:left;" placeholder="이메일 입력" autofocus/>
             <p style="float:left;margin-left:10px;margin-right:10px;"> @ </p>
             <select class="form-select" v-model="state.usermail1" aria-label="Default select example"
                 style="width:20%;height:32px;font-size:15px;padding-bottom:1px;padding-top:1px;">
@@ -14,7 +14,7 @@
                 <option class="options" value="daum.net">daum.net</option>
             </select>
         </div>
-
+        <div style="color:red;font-weight: bold;">{{ state.errorcontent }}</div>
         <div class="field">
             <label for="password" class="lbl">패스워드</label>
             <el-input type="password" ref="password" v-model="state.password" style="width:20%;"  placeholder="비밀번호 입력"/>
@@ -56,7 +56,7 @@
                 <label class="form-check-label" for="inlineRadio2">여성</label>
             </div>
         </div>
-
+        
         <div class="field" style="margin-bottom:100px;">
             <label for="" class="lbl"></label>
             <el-button @click="handleJoin()" type="success">회원가입</el-button>
@@ -85,6 +85,8 @@ export default {
             address: '',
             detailaddress: '',
             username: '',
+            errorcontent: '',
+
         });
 
         const sample6_execDaumPostcode = () => {
@@ -149,10 +151,13 @@ export default {
         //회원가입
         const handleJoin = async () => {
 
-            if (state.email === '') {
-                alert('email 입력하세요.');
+            if (state.usermail === '') {
+                // alert('email 입력하세요.');
+                state.errorcontent = "email 입력하세요";
                 email.value.focus();
                 return false;
+            } else {
+                state.errorcontent = '';
             }
             if (state.password === '') {
                 alert('패스워드를 입력하세요.');

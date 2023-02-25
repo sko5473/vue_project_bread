@@ -15,6 +15,12 @@
         </div>
         <br>
         <br>
+        <el-alert
+            title="success alert"
+            type="success"
+            description="more text description"
+            show-icon
+        />
         <div>
             <label for="button" class="lbl">&nbsp;</label>
             <el-button @click="handleLogin()" id="loginBtn">로그인</el-button>
@@ -59,7 +65,7 @@ export default {
                 email: state.form.loginEmail,
                 password: state.form.loginPw,
             }
-            const { data } = await axios.post(url, body, { headers });
+            const {data}  = await axios.post(url, body, { headers });
             console.log('로그인', data);
 
             if (data.status === 200) {
@@ -102,7 +108,7 @@ export default {
                     console.log('회원가입', data);
 
                     if (data.status === 200) {
-                        alert('가입되었습니다.');
+                        alert('가입되었습니다. 다시 로그인해주세요.');
                         router.push({ path: '/login' });
                     }
                 }

@@ -2,8 +2,12 @@
     <div id="admin_wrap">
         <div id="menu_box">
             <ul id="menu">
-                <RouterLink to="/admin" style="color:black;text-decoration-line:none;"><li>1:1문의사항 답변</li></RouterLink>
-                <RouterLink to="/adminchart" style="color:black;text-decoration-line:none;"><li>통계</li></RouterLink>
+                <RouterLink to="/admin" style="color:black;text-decoration-line:none;">
+                    <li>1:1문의사항 답변</li>
+                </RouterLink>
+                <RouterLink to="/adminchart" style="color:black;text-decoration-line:none;">
+                    <li>통계</li>
+                </RouterLink>
             </ul>
         </div>
 
@@ -27,15 +31,15 @@
                 <p class="chart_title">즐겨찾기 많은 순</p>
                 <canvas id="myChart4" width="380px" height="280px"></canvas>
             </div>
-            <div>
+            <!-- <div>
                 <button @click="handleChartData()" style="margin-top:200px;">차트데이터변경</button>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
 
 <script>
-import { reactive, onMounted, shallowRef  } from 'vue';
+import { reactive, onMounted, shallowRef } from 'vue';
 import { Chart } from 'chart.js/auto'
 import axios from 'axios';
 
@@ -48,11 +52,11 @@ export default {
             chart4: '',
         });
 
-        const calcreviewcount = async() => {
+        //월별 리뷰카운트 수 조회 후 결과 차트2 반영
+        const calcreviewcount = async () => {
             const url = `/api/bakeryreview/selectreviewcountforchart.json`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
-            console.log("차트리뷰수카운트확인", data);
 
             if (data.status === 200) {
                 state.chart2.data.datasets[0].data = data.total;
@@ -60,26 +64,46 @@ export default {
             }
         }
 
-        //차트 성비 config
-        const genderConfig = {
-            type: 'bar',
+        //남녀 성비 조회 후 차트3 반영
+        const calcgenderrate = async () => {
+            const url = `/api/user/selectusergenderrate.json`;
+            const headers = { "Content-Type": "application/json" };
+            const  data  = await axios.get(url, { headers });
+            console.log("남녀성비", data);
+
+            if (data.status === 200) {
+                state.chart3.data.datasets[0].data.push(data.maleTotal);
+                state.chart3.data.datasets[1].data.push(data.femaleTotal);
+                state.chart3.update();
+            }
+        }
+
+        //즐겨찾기 많은 순 내림차순 정렬 후 차트4 반영
+        const calcstarcount = async () => {
+            const url = `/api/bakery/selectshoporderbystar.json`;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+
+            if (data.status === 200) {
+                for (var i = 0; i < data.result.length; i++) {
+                    state.chart4.data.datasets[0].data.push(data.result[i].bookmarkcount);
+                    state.chart4.data.labels.push(data.result[i].name);
+                }
+                state.chart4.update();
+            }
+        };
+
+        //월별 방문자수 차트 config
+        const visitCountConfig = {
+            type: 'line',
             data: {
                 labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
                 datasets: [
                     {
-                        label: '남자',
+                        label: '방문자 수',
                         data: [65, 59, 80, 81, 56, 55, 40],
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderWidth: 2,
-                        borderRadius: 5,
-                        borderSkipped: false,
-                    },
-                    {
-                        label: '여자',
-                        data: [60, 40, 87, 83, 51, 59, 45],
-                        borderColor: 'rgb(240, 180, 120)',
-                        backgroundColor: 'rgba(240, 180, 120, 0.2)',
                         borderWidth: 2,
                         borderRadius: 5,
                         borderSkipped: false,
@@ -123,17 +147,26 @@ export default {
             },
         };
 
-        //월별 방문자수 차트 config
-        const visitCountConfig = {
-            type: 'line',
+        //차트 성비 config
+        const genderConfig = {
+            type: 'bar',
             data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                labels: ['성비'],
                 datasets: [
                     {
-                        label: '방문자수',
-                        data: [65, 59, 80, 81, 56, 55, 40],
+                        label: '남자',
+                        data: [],
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 2,
+                        borderRadius: 5,
+                        borderSkipped: false,
+                    },
+                    {
+                        label: '여자',
+                        data: [],
+                        borderColor: 'rgb(240, 180, 120)',
+                        backgroundColor: 'rgba(240, 180, 120, 0.2)',
                         borderWidth: 2,
                         borderRadius: 5,
                         borderSkipped: false,
@@ -154,11 +187,11 @@ export default {
         const starConfig = {
             type: 'bar',
             data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                labels: [],
                 datasets: [
                     {
-                        label: '방문자수',
-                        data: [65, 59, 80, 81, 56, 55, 40],
+                        label: '즐겨찾기 수',
+                        data: [],
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         borderWidth: 2,
@@ -178,37 +211,37 @@ export default {
         };
 
         //차트 데이터 변경
-        const handleChartData = () => {
-            console.log('화긴', state.chart3.data);
-            // state.chart1.data.labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
-            state.chart3.data.datasets[0].data = [45, 78, 23, 78, 67, 34, 42];
-            state.chart3.data.datasets[1].data = [49, 52, 33, 24, 38, 37, 45];
-            state.chart3.update();
-        }
+        // const handleChartData = () => {
+        //     state.chart3.data.datasets[0].data = [45, 78, 23, 78, 67, 34, 42];
+        //     state.chart3.data.datasets[1].data = [49, 52, 33, 24, 38, 37, 45];
+        //     state.chart3.update();
+        // }
 
         //차트 구성
         const initChart = () => {
             const ctx1 = document.getElementById('myChart1');
-            state.chart1 = new Chart(ctx1, visitCountConfig);
-            
+            state.chart1 = shallowRef(new Chart(ctx1, visitCountConfig));
+
             const ctx2 = document.getElementById('myChart2');
             state.chart2 = shallowRef(new Chart(ctx2, reviewCountConfig));
-            
+
             const ctx3 = document.getElementById('myChart3');
-            state.chart3 = new Chart(ctx3, genderConfig);
+            state.chart3 = shallowRef(new Chart(ctx3, genderConfig));
 
             const ctx4 = document.getElementById('myChart4');
-            state.chart4 = new Chart(ctx4, starConfig);
+            state.chart4 = shallowRef(new Chart(ctx4, starConfig));
         };
 
         onMounted(() => {
-            initChart();
-            calcreviewcount();
+            initChart(); // 설정 반영한 차트 생성
+            calcreviewcount(); // 차트용 리뷰카운트 수
+            calcstarcount(); //차트용 즐겨찾기 수
+            calcgenderrate(); // 차트용 남녀성비
         });
 
         return {
-            state,
-            handleChartData,
+            state, //상태변수
+            // handleChartData, //차트3 데이터 변경
         }
     }
 }
@@ -248,13 +281,13 @@ export default {
     margin-top: 20px;
 }
 
-.charts{
+.charts {
     float: left;
-    margin-left:30px;
-    border:1px solid #cccccc;
+    margin-left: 30px;
+    border: 1px solid #cccccc;
 }
 
-.chart_title{
+.chart_title {
     font-family: custom_font2;
     font-size: 17px;
     text-align: center;
