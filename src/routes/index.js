@@ -14,6 +14,7 @@ import MyPage from '@/components/User/MyPage.vue';
 import Cs from '@/components/CsPage.vue';
 import Admin from '@/components/User/AdminPage.vue';
 import Introduce from '@/components/IntroducePage.vue';
+import AdminChart from '@/components/User/AdminChartPage.vue';
 
 const isLogin = computed(()=> store.state.isLogin); //vuex에서 로그인유무상태를 가져온다.
 
@@ -44,6 +45,7 @@ const router = createRouter({
         { path: '/cs', component: Cs },
         { path: '/admin', component: Admin },
         { path: '/introduce', component: Introduce },
+        { path: '/adminchart', component: AdminChart },
     ]
 });
 
