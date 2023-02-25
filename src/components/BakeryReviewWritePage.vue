@@ -62,7 +62,7 @@ export default {
 
         //리뷰 저장
         const reviewsave = async() => {
-            //저장 로직 실행 되기전 유저 인증리뷰 체크 먼저
+            //저장 로직 실행 되기 전 유저 인증리뷰 체크
             const url = `/api/user/userupdatereviewcount.json`;
             const headers = { "Content-Type": "application/json" };
             const body = new FormData();
@@ -84,12 +84,27 @@ export default {
                 console.log("리뷰저장 데이터 확인", data);
                 if (data.status === 200) {
                     alert('저장되었습니다.');
+                    pointupdate(state.no); //리뷰작성 완료되면 평점을 갱신한다.
                     updatereviewcount(); //상점 리뷰 수+1
                     router.push({path:'/bakeryone',query:{_id:state.no}});
                 }
 
             }
 
+        };
+
+        //리뷰작성 완료시 평점 갱신 로직
+        const pointupdate = async(id) => {
+            const url = `/api/bakery/updateshoppoint.json?_id=${id}`;
+            const headers = { "Content-Type": "application/json" };
+            const body = {};
+            const { data } = await axios.put(url, body, { headers });
+            console.log('평점갱신 확인', data);
+
+            // if (data.status === 200) {
+            //     alert('수정되었습니다.');
+            //     router.go(0); //새로고침
+            // }
         };
 
         //상점별 리뷰수 업데이트(리뷰 저장시 실행)
@@ -105,6 +120,7 @@ export default {
             handleFile,
             reviewsave,
             updatereviewcount,
+            pointupdate,
         }
     }
 }

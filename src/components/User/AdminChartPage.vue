@@ -23,17 +23,14 @@
             </div>
 
             <div id="statistics_leftdown" class="charts" style="margin-top:30px;">
-                <p class="chart_title">월별 가입자 성별</p>
+                <p class="chart_title">회원 남녀성비</p>
                 <canvas id="myChart3" width="380px" height="280px"></canvas>
             </div>
 
             <div id="statistics_rightdown" class="charts" style="margin-top:30px;margin-left:70px;">
-                <p class="chart_title">즐겨찾기 많은 순</p>
+                <p class="chart_title">즐겨찾기 TOP7</p>
                 <canvas id="myChart4" width="380px" height="280px"></canvas>
             </div>
-            <!-- <div>
-                <button @click="handleChartData()" style="margin-top:200px;">차트데이터변경</button>
-            </div> -->
         </div>
     </div>
 </template>
@@ -52,6 +49,20 @@ export default {
             chart4: '',
         });
 
+        //월별 방문자 수 조회 후 결과 차트1 반영
+        const calcvisitcount = async () => {
+            const url = `/api/loginiplog/selectvisitcount.json`;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+
+            if (data.status === 200) {
+                for(var i=0; i<data.IpCount.length; i++){
+                    state.chart1.data.datasets[0].data.push(data.IpCount[i].length);
+                }
+                state.chart1.update();
+            }
+        }
+
         //월별 리뷰카운트 수 조회 후 결과 차트2 반영
         const calcreviewcount = async () => {
             const url = `/api/bakeryreview/selectreviewcountforchart.json`;
@@ -68,8 +79,7 @@ export default {
         const calcgenderrate = async () => {
             const url = `/api/user/selectusergenderrate.json`;
             const headers = { "Content-Type": "application/json" };
-            const  data  = await axios.get(url, { headers });
-            console.log("남녀성비", data);
+            const { data }  = await axios.get(url, { headers });
 
             if (data.status === 200) {
                 state.chart3.data.datasets[0].data.push(data.maleTotal);
@@ -97,11 +107,11 @@ export default {
         const visitCountConfig = {
             type: 'line',
             data: {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 datasets: [
                     {
                         label: '방문자 수',
-                        data: [65, 59, 80, 81, 56, 55, 40],
+                        data: [],
                         borderColor: 'rgb(75, 192, 192)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         borderWidth: 2,
@@ -210,13 +220,6 @@ export default {
             },
         };
 
-        //차트 데이터 변경
-        // const handleChartData = () => {
-        //     state.chart3.data.datasets[0].data = [45, 78, 23, 78, 67, 34, 42];
-        //     state.chart3.data.datasets[1].data = [49, 52, 33, 24, 38, 37, 45];
-        //     state.chart3.update();
-        // }
-
         //차트 구성
         const initChart = () => {
             const ctx1 = document.getElementById('myChart1');
@@ -233,15 +236,15 @@ export default {
         };
 
         onMounted(() => {
-            initChart(); // 설정 반영한 차트 생성
-            calcreviewcount(); // 차트용 리뷰카운트 수
-            calcstarcount(); //차트용 즐겨찾기 수
-            calcgenderrate(); // 차트용 남녀성비
+            initChart(); // 차트 생성
+            calcreviewcount(); // 리뷰카운트 수 계산
+            calcstarcount(); // 즐겨찾기 수 계산
+            calcgenderrate(); // 남녀성비 계산
+            calcvisitcount(); // 월별 방문자수 계산
         });
 
         return {
             state, //상태변수
-            // handleChartData, //차트3 데이터 변경
         }
     }
 }
@@ -292,4 +295,5 @@ export default {
     font-size: 17px;
     text-align: center;
 }
+
 </style>

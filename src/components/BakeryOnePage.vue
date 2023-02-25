@@ -142,7 +142,6 @@ export default {
             const url = `/api/mybookmark/selectmybookmark.json?_id=${state.no}`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
-            console.log("북마크목록에 있는지 확인", data);
 
             if (data.status === 200) {
                 if (data.result.length > 0) {
@@ -174,7 +173,6 @@ export default {
             body.append("email", state.userInfo.email);
             body.append("address", state.rows.address);
             const { data } = await axios.post(url, body, { headers });
-            console.log("나의즐겨찾기 저장", data);
 
             if (data.status === 200) {
                 state.isbookmark = true
@@ -295,8 +293,6 @@ export default {
                 }
 
             }
-            console.log('셋', state.set);
-            console.log('카운트', state.count);
         };
 
         // 모달창 안 다음 리뷰 보기
@@ -321,15 +317,12 @@ export default {
                     return false;
                 }
             }
-            console.log('셋', state.set);
-            console.log('카운트', state.count);
         };
 
         //클릭한 모달이미지 하이라이트 부여
         const highlight = (e) => {
             if (typeof e === 'number') {
                 const modal_small_img = document.getElementsByClassName('modal_small_img');
-                console.log('이거요', e);
 
                 for (var j = 0; j < modal_small_img.length; j++) {
                     modal_small_img[j].classList.remove('on');

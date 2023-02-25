@@ -70,12 +70,23 @@ export default {
 
             if (data.status === 200) {
                 alert('로그인 성공');
+                loginIpLogSave(state.form.loginEmail); //로그인성공시 클라이언트ip를 저장하는 로직 실행
                 router.push({ path: '/' });
                 store.dispatch("login", data); //로그인성공시 vuex의 login메서드를 실행한다.
             } else {
                 state.form.loginPw = "";
             }
         }
+
+        //로그인성공시 클라이언트ip를 저장하는 로직 실행
+        const loginIpLogSave = async(email) => {
+            const url = `/api/loginiplog/insertloginiplog.json`;
+            const headers = { "Content-Type": "application/json" };
+            const body = {
+                email: email,
+            }
+            await axios.post(url, body, { headers });
+        };
 
         //구글 로그인 로그
         const callback = async(response) => {
@@ -92,6 +103,7 @@ export default {
 
             if (data.status === 200) {
                 alert('로그인 성공');
+                loginIpLogSave(userData.email); //로그인 성공시 로그인 ip저장로직 실행
                 router.push({ path: '/' });
                 store.dispatch("login", data); //로그인성공시 vuex의 login메서드를 실행한다.
             } else {
@@ -114,14 +126,6 @@ export default {
                 }
                 router.push({ path: '/login' });
             }
-            
-            // userData.imageurl= userData.picture;
-            // delete userData.picture;
-            
-            // userData.isGoogleLogin = "true";
-
-            // store.commit("loginSuccess",userData);
-
         }
 
         return {
@@ -132,6 +136,7 @@ export default {
         }
     }
 }
+
 </script>
 
 <style lang="css" scoped>
