@@ -1,25 +1,42 @@
 <template>
-    <div>
-        <h3>리뷰 작성</h3>
+    <div id="review_write_wrap">
+        <h3 id="review_title">
+            <span style="color:orange;">{{state.shopname}}</span>
+            <span style="font-size:18px;">에 대한 솔직한 리뷰를 작성해주세요.</span>
+        </h3>
 
-        <div>
-            <label for="point">평점</label>
-            <input type="number" v-model="state.point"/>
+        <div style="margin-left:150px;">
+            <div class="star-rating space-x-4 mx-auto" style="float:left;">
+                <input type="radio" id="5-stars" name="rating" value="5" v-model="state.point"/>
+                <label for="5-stars" class="star pr-4">★</label>
+                <input type="radio" id="4-stars" name="rating" value="4" v-model="state.point"/>
+                <label for="4-stars" class="star">★</label>
+                <input type="radio" id="3-stars" name="rating" value="3" v-model="state.point"/>
+                <label for="3-stars" class="star">★</label>
+                <input type="radio" id="2-stars" name="rating" value="2" v-model="state.point"/>
+                <label for="2-stars" class="star">★</label>
+                <input type="radio" id="1-star" name="rating" value="1" v-model="state.point" />
+                <label for="1-star" class="star">★</label>
+            </div>
+            <div style="float:left;line-height: 50px;margin-left:20px;margin-bottom:20px;">({{ state.point }}점)</div>
+
         </div>
-        <div>
-            <label for="point">내용</label>
-            <input type="text" v-model="state.content"/>
-        </div>
-        <div>
-            <label for="picture"></label>
-            <input type="file" v-on:change="handleFile($event)" />
+        
+        <div style="margin-bottom:30px;">
+            <el-input cols="30" :rows="7" type="textarea" v-model="state.content" placeholder="내용을 입력하세요."/>
         </div>
 
-        <div>
-            <button @click="reviewsave()">저장</button>
+        <div class="filebox">
+            <label for="file">파일찾기</label>
+            <input type="file" id="file" v-on:change="handleFile($event)" />
         </div>
+
         <div id="thumnail_box">
             <img id="review_img" :src="state.img" alt="이미지"/>
+        </div>
+
+        <div id="save_btn">
+            <el-button @click="reviewsave()" style="width:100%;">저장</el-button>
         </div>
     </div>
 </template>
@@ -44,6 +61,7 @@ export default {
             img: require('../assets/imgs/noimage.gif'),
             no: route.query._id,
             userInfo: null,
+            shopname:route.query.shop,
         });
 
         state.userInfo = computed(() => store.state.userInfo);
@@ -127,6 +145,19 @@ export default {
 </script>
 
 <style lang="css" scoped>
+#review_write_wrap{
+    width:500px;
+    margin:0 auto;
+    overflow: hidden;
+}
+
+#review_title{
+    margin-top:30px;
+    margin-bottom:30px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    text-align: center;
+}
+
 #thumnail_box{
     width:200px;
 }
@@ -134,5 +165,62 @@ export default {
 #review_img{
     width:100%;
     height:100%;
+}
+
+#save_btn{
+    margin-top:10px;
+    margin-bottom:50px;
+}
+
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  justify-content: space-around;
+  padding: 0 0.2em;
+  text-align: center;
+  width: 5em;
+}
+ 
+.star-rating input {
+  display: none;
+}
+ 
+.star-rating label {
+  -webkit-text-fill-color: transparent; 
+  -webkit-text-stroke-width: 2.3px;
+  -webkit-text-stroke-color: #2b2a29;
+  cursor: pointer;
+}
+ 
+.star-rating :checked ~ label {
+  -webkit-text-fill-color: gold;
+}
+ 
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  -webkit-text-fill-color: #fff58c;
+}
+
+.filebox label {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    vertical-align: middle;
+    background-color: #999999;
+    cursor: pointer;
+    height: 37px;
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.filebox input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
 }
 </style>

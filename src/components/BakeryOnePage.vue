@@ -1,5 +1,5 @@
 <template>
-    <div id="wrap" :class="reviewmodal ? 'wrapon' : ''">
+    <div id="bakeryone_wrap" :class="reviewmodal ? 'wrapon' : ''">
         <div id="review_img_zone">
             <div id="review_imgs_box">
                 <div id="review_imgs" v-for="(data, index) of reviewrows" :key="index">
@@ -206,7 +206,7 @@ export default {
 
         // 리뷰쓰기페이지 이동
         const moveReviewWrite = () => {
-            router.push({ path: '/bakeryreviewwrite', query: { _id: state.no } });
+            router.push({ path: '/bakeryreviewwrite', query: { _id: state.no, shop: state.rows.name } });
         }
 
         // 리뷰 데이터 수신
@@ -372,15 +372,11 @@ export default {
 </script>
 
 <style lang="css" scoped>
-* {
-    margin: 0;
-    padding: 0;
-}
 
-#wrap {
-    width: 1920px;
-    overflow: hidden;
+#bakeryone_wrap {
     margin: 0 auto;
+    width: 1440px;
+    overflow: hidden;
 }
 
 .wrapon {
