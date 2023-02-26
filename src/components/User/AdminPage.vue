@@ -130,7 +130,7 @@ export default {
             console.log("문의사항 답글", data);
             if (data.status === 200) {
                 updatequestionstatus();
-                state.adminNum === 1;
+                alert("등록되었습니다.");
                 handleQuestion();
             }
         };

@@ -117,6 +117,10 @@ export default {
 #menuWrap {
     width: 1565px;
     margin: 0 auto;
+    position: fixed;
+    z-index:2;
+    left:0;
+    right:0;
 }
 
 .logo {

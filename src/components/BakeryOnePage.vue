@@ -73,6 +73,7 @@
                 rows.bookmarkcount
             }}</div>
             <br />
+            <div>평점 : {{ rows.point }}</div>
             <div>가게명 : {{ rows.name }}</div>
             <div>주소 : {{ rows.address }}</div>
             <div>메뉴 : {{ rows.menu }}</div>
@@ -131,6 +132,7 @@ export default {
             const url = `/api/bakery/bakeryone.json?_id=${state.no}`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
+            console.log('값',data);
 
             if (data.status === 200) {
                 state.rows = data.result;

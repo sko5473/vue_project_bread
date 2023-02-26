@@ -8,6 +8,7 @@ import Home from '@/components/HomePage.vue';
 import BakeryCategoryList from '@/components/BakeryCategoryListPage.vue';
 import BakeryOne from '@/components/BakeryOnePage.vue';
 import BakeryReviewWrite from '@/components/BakeryReviewWritePage.vue';
+import BakeryStory from '@/components/BakeryStoryPage.vue';
 import Join from '@/components/User/JoinPage.vue';
 import Login from '@/components/User/LoginPage.vue';
 import MyPage from '@/components/User/MyPage.vue';
@@ -39,6 +40,7 @@ const router = createRouter({
             component: BakeryReviewWrite,
             beforeEnter: loginCheck //라우터 실행 전 이 함수를 먼저 실행하여 리뷰작성시 로그인 유무 확인
         },
+        { path: '/bakerystory', component: BakeryStory },
         { path: '/join', component: Join },
         { path: '/login', component: Login },
         { path: '/mypage', component: MyPage },

@@ -11,7 +11,6 @@
                 <div class="module_title_wrap">
                     <h2 class="section_title">지역별 빵 맛집 리스트</h2>
                 </div>
-                <div class="left_btn"><img src="../assets/imgs/leftBtn.png" alt="왼쪽화살표" /></div>
                 <!-- 모듈 내용박스 -->
                 <div class="module_contentBox">
                     <!-- ul묶음 -->
@@ -77,158 +76,151 @@
                         </li>
                     </ul>
                 </div>
-                <div class="right_btn"><img src="../assets/imgs/rightBtn.png" alt="오른쪽화살표" /></div>
+            </section>
+
+            <!-- 섹션 소제목 -->
+            <section class="section_wrap2">
+                
+                <div class="module_title_wrap">
+                    <h2 class="section_title">빵 맛집 스토리</h2>
+                </div>
+                
+                <el-carousel :interval="1000000" type="card" height="320px" style="left:40px;">
+                    <el-carousel-item>
+                        <img src="@/assets/imgs/bread1.jpg" class="story_img" @click="moveStory('카페')" alt="">
+                        <div class="editor_title">대형카페 추천 7곳</div>
+                        <div class="editor_stitle">넓고 좋아요</div>
+                        <div class="editor_pic">
+                            <img src="@/assets/imgs/simson.jpg" style="width:100%;height:100%;" alt="">
+                        </div>
+                        <div class="editor_name">Editor 심슨</div>
+                    </el-carousel-item>
+                    <el-carousel-item>
+                        <img src="@/assets/imgs/bread2.jpg" class="story_img" alt="">
+                        <div class="editor_title">대형카페 추천 7곳</div>
+                        <div class="editor_stitle">넓고 좋아요</div>
+                        <div class="editor_pic">
+                            <img src="@/assets/imgs/simson.jpg" style="width:100%;height:100%;" alt="">
+                        </div>
+                        <div class="editor_name">Editor 심슨</div>
+                    </el-carousel-item>
+                    <el-carousel-item>
+                        <img src="@/assets/imgs/bread3.jpg" class="story_img" alt="">
+                        <div class="editor_title">대형카페 추천 7곳</div>
+                        <div class="editor_stitle">넓고 좋아요</div>
+                        <div class="editor_pic">
+                            <img src="@/assets/imgs/simson.jpg" style="width:100%;height:100%;" alt="">
+                        </div>
+                        <div class="editor_name">Editor 심슨</div>
+                    </el-carousel-item>
+                    <el-carousel-item>
+                        <img src="@/assets/imgs/bread1.jpg" class="story_img" alt="">
+                        <div class="editor_title">대형카페 추천 7곳</div>
+                        <div class="editor_stitle">넓고 좋아요</div>
+                        <div class="editor_pic">
+                            <img src="@/assets/imgs/simson.jpg" style="width:100%;height:100%;" alt="">
+                        </div>
+                        <div class="editor_name">Editor 심슨</div>
+                    </el-carousel-item>
+                    <el-carousel-item>
+                        <img src="@/assets/imgs/bread2.jpg" class="story_img" alt="">
+                        <div class="editor_title">대형카페 추천 7곳</div>
+                        <div class="editor_stitle">넓고 좋아요</div>
+                        <div class="editor_pic">
+                            <img src="@/assets/imgs/simson.jpg" style="width:100%;height:100%;" alt="">
+                        </div>
+                        <div class="editor_name">Editor 심슨</div>
+                    </el-carousel-item>
+                    <el-carousel-item>
+                        <img src="@/assets/imgs/bread3.jpg" class="story_img" alt="">
+                        <div class="editor_title">대형카페 추천 7곳</div>
+                        <div class="editor_stitle">넓고 좋아요</div>
+                        <div class="editor_pic">
+                            <img src="@/assets/imgs/simson.jpg" style="width:100%;height:100%;" alt="">
+                        </div>
+                        <div class="editor_name">Editor 심슨</div>
+                    </el-carousel-item>
+                </el-carousel>
+                
             </section>
 
             <!-- 섹션 소제목 -->
             <section class="section_wrap">
-                
                 <div class="module_title_wrap">
-                    <h2 class="section_title">지역별 빵 맛집 리스트</h2>
+                    <h2 class="section_title">키워드 별 빵 맛집 리스트</h2>
                 </div>
-                <div class="left_btn"><img src="../assets/imgs/leftBtn.png" alt="왼쪽화살표" /></div>
+
                 <!-- 모듈 내용박스 -->
                 <div class="module_contentBox">
                     <!-- ul묶음 -->
                     <ul class="module_ul">
                         <li class="module_li">
                             <!-- 사진 -->
-                            <img class="module_bread_img" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
+                            <img class="module_bread_img" @click="handleContent('view')" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
                             <!-- 사진 내 정보 박스 -->
                             <figure class="module_info">
                                 <!-- 사진 내 정보 -->
                                 <div class="inner_info">
-                                    <span class="li_inner_title">부산진구2 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
+                                    <span class="li_inner_title">전망 좋은 제과점 Best50</span>
+                                    <p class="li_inner_subTitle">전망 좋은 제과점</p>
                                 </div>
                             </figure>
                         </li>
                         <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
+                            <img class="module_bread_img" @click="handleContent('parking')" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
                             <figure class="module_info">
                                 <div class="inner_info">
-                                    <span class="li_inner_title">해운대구2 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
+                                    <span class="li_inner_title">주차공간이 넓은 제과점 Best50</span>
+                                    <p class="li_inner_subTitle">주차공간이 넓은 제과점</p>
                                 </div>
                             </figure>
                         </li>
                         <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
+                            <img class="module_bread_img" @click="handleContent('meeting')" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
                             <figure class="module_info">
                                 <div class="inner_info">
-                                    <span class="li_inner_title">동구2 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
+                                    <span class="li_inner_title">단체모임하기 좋은 제과점 Best50</span>
+                                    <p class="li_inner_subTitle">단체모임하기 좋은 제과점</p>
                                 </div>
                             </figure>
                         </li>
                         <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
+                            <img class="module_bread_img" @click="handleContent('coffee')" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
                             <figure class="module_info">
                                 <div class="inner_info">
-                                    <span class="li_inner_title">남구2 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
-                                </div>
-                            </figure>
-                        </li>
-
-                        <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
-                            <figure class="module_info">
-                                <div class="inner_info">
-                                    <span class="li_inner_title">동래구2 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
+                                    <span class="li_inner_title">커피가 맛있는 제과점 Best50</span>
+                                    <p class="li_inner_subTitle">커피가 맛있는 제과점</p>
                                 </div>
                             </figure>
                         </li>
 
                         <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
+                            <img class="module_bread_img" @click="handleContent('bread')" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
                             <figure class="module_info">
                                 <div class="inner_info">
-                                    <span class="li_inner_title">중구2 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
+                                    <span class="li_inner_title">빵 종류가 많은 제과점 Best50</span>
+                                    <p class="li_inner_subTitle">빵 종류가 많은 제과점</p>
+                                </div>
+                            </figure>
+                        </li>
+
+                        <li class="module_li">
+                            <img class="module_bread_img" @click="handleContent('approach')" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
+                            <figure class="module_info">
+                                <div class="inner_info">
+                                    <span class="li_inner_title">접근성이 좋은 제과점 Best50</span>
+                                    <p class="li_inner_subTitle">접근성이 좋은 제과점</p>
                                 </div>
                             </figure>
                         </li>
                     </ul>
                 </div>
-                <div class="right_btn"><img src="../assets/imgs/rightBtn.png" alt="오른쪽화살표" /></div>
             </section>
-
-            <!-- 섹션 소제목 -->
-            <section class="section_wrap">
-                
-                <div class="module_title_wrap">
-                    <h2 class="section_title">지역별 빵 맛집 리스트</h2>
-                </div>
-                <div class="left_btn"><img src="../assets/imgs/leftBtn.png" alt="왼쪽화살표" /></div>
-                <!-- 모듈 내용박스 -->
-                <div class="module_contentBox">
-                    <!-- ul묶음 -->
-                    <ul class="module_ul">
-                        <li class="module_li">
-                            <!-- 사진 -->
-                            <img class="module_bread_img" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
-                            <!-- 사진 내 정보 박스 -->
-                            <figure class="module_info">
-                                <!-- 사진 내 정보 -->
-                                <div class="inner_info">
-                                    <span class="li_inner_title">부산진구3 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
-                                </div>
-                            </figure>
-                        </li>
-                        <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
-                            <figure class="module_info">
-                                <div class="inner_info">
-                                    <span class="li_inner_title">해운대구3 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
-                                </div>
-                            </figure>
-                        </li>
-                        <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
-                            <figure class="module_info">
-                                <div class="inner_info">
-                                    <span class="li_inner_title">동구3 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
-                                </div>
-                            </figure>
-                        </li>
-                        <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
-                            <figure class="module_info">
-                                <div class="inner_info">
-                                    <span class="li_inner_title">남구3 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
-                                </div>
-                            </figure>
-                        </li>
-
-                        <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread1.jpg" alt="컨테이너1사진1">
-                            <figure class="module_info">
-                                <div class="inner_info">
-                                    <span class="li_inner_title">동래구3 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
-                                </div>
-                            </figure>
-                        </li>
-
-                        <li class="module_li">
-                            <img class="module_bread_img" src="@/assets/imgs/bread2.jpg" alt="컨테이너1사진2">
-                            <figure class="module_info">
-                                <div class="inner_info">
-                                    <span class="li_inner_title">중구3 제과점 Best50</span>
-                                    <p class="li_inner_subTitle">우리 동네에 이런 빵집이?</p>
-                                </div>
-                            </figure>
-                        </li>
-                    </ul>
-                </div>
-                <div class="right_btn"><img src="../assets/imgs/rightBtn.png" alt="오른쪽화살표" /></div>
-            </section>
+        </div>
+        <!-- TOP버튼 -->
+        <div id="top_btn" @click="handleTop">
+            <div id="top_btn_arrow">┌</div>
+            <div>TOP</div>
         </div>
     </div>
 </template>
@@ -244,11 +236,17 @@ export default {
 
     setup() {
 
+        //빵집 리스트 페이지 이동
         const handleContent = async(place) => {
-            console.log('장소',place);
             router.push({ path:'/bakerycategorylist', query: {page:1, text : place}});
         };
 
+        //스토리 페이지 이동
+        const moveStory = async(keyword) => {
+            router.push({ path:'/bakerystory', query: {page:1, text : keyword}});
+        };
+
+        //타이틀 슬라이드
         const slides = [
             {
                 title: '부산 빵지순례',
@@ -262,11 +260,18 @@ export default {
                 title: '부산 빵지순례',
                 image: require('@/assets/imgs/bread3.jpg'),
             },
-        ]
+        ];
+
+        //TOP 이동 기능
+        const handleTop = () => {
+            window.scrollTo(0,0);
+        };
 
         return {
             slides,
             handleContent,
+            handleTop, //TOP 이동 기능
+            moveStory, //스토리페이지 이동
         }
     }
 }
@@ -287,6 +292,7 @@ export default {
     font-style: normal;
 }
 
+/* 홈 wrap */
 #wrap{
     width:1565px;
     overflow:hidden;
@@ -302,9 +308,70 @@ export default {
     border-bottom: 2px solid #cccccc;
     width: 1565px;
     height: 740px;
+    margin-left:45px;
+    margin-top:50px;
+    position:relative;
+}
+
+/* 빵 맛집 스토리 스타일 */
+.section_wrap2 {
+    border-bottom: 2px solid #cccccc;
+    width: 1565px;
+    height: 420px;
     margin-left:65px;
     margin-top:50px;
     position:relative;
+}
+
+/* 빵 맛집 스토리 아이템 */
+.el-carousel__item {
+    width:600px;
+}
+
+/* 빵 맛집 스토리 아이템 사진 */
+.story_img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 빵 맛집 스토리 타이틀 */
+.editor_title{
+    position: absolute;
+    bottom: 200px;
+    left:130px;
+    font-size: 40px;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+/* 빵 맛집 스토리 소제목 */
+.editor_stitle{
+    position: absolute;
+    bottom: 160px;
+    left:240px;
+    font-size: 20px;
+    color: white;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+/* 빵 맛집 스토리 에디터 사진 */
+.editor_pic{
+    position:absolute;
+    width:55px;
+    height:55px;
+    border-radius: 30px;
+    left:265px;
+    bottom:80px;
+    overflow: hidden;
+}
+
+/* 빵 맛집 스토리 에디터 아이디 */
+.editor_name{
+    position:absolute;
+    bottom:55px;
+    left:255px;
+    color:white;
 }
 
 /* 왼쪽 화살표 */
@@ -380,4 +447,30 @@ export default {
     color:white;
     font-size:20px;
 }
+
+/* 탑 버튼 */
+#top_btn{
+    width:60px;
+    height:60px;
+    background-color: rgb(74, 72, 72);
+    color: rgb(217, 214, 214);
+    font-size: 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 10px;
+    right: 5px;
+    z-index:1;
+    border-radius: 10px;
+    border-color: rgb(74, 72, 72);
+    cursor: pointer;
+}
+
+/* 탑 버튼 화살표 */
+#top_btn_arrow{
+    transform: rotate(45deg);
+    line-height:10px;
+    margin-bottom:5px;
+    margin-top:5px;
+}
+
 </style>
