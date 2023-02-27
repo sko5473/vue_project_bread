@@ -145,7 +145,7 @@
             </section>
 
             <!-- 섹션 소제목 -->
-            <section class="section_wrap">
+            <section class="section_wrap" style="border:none;">
                 <div class="module_title_wrap">
                     <h2 class="section_title">키워드 별 빵 맛집 리스트</h2>
                 </div>
