@@ -57,10 +57,19 @@
             </div>
         </div>
         <div style="float:left;margin-left:20px;"><el-button @click="moveReviewWrite()">리뷰쓰기</el-button></div>
-        <div style="margin-left:50px;opacity:0.7;" v-if="isbookmark === false">
+
+        <!-- 비로그인 일 때 빈 별 -->
+        <div style="margin-left:50px;opacity:0.7;" v-if="isLogin===false">
+            <img src="@/assets/imgs/star.png" style="width:25px;"/> 즐겨찾기
+        </div>
+
+        <!-- 로그인 되어 있고 즐찾 안되어 있을때 빈 별 -->
+        <div style="margin-left:50px;opacity:0.7;" v-if="isbookmark === false && isLogin===true">
             <img src="@/assets/imgs/star.png" style="width:25px;" @click="updateStar()" /> 즐겨찾기
         </div>
-        <div style="margin-left:50px;opacity:0.7;" v-if="isbookmark === true">
+
+        <!-- 로그인 되어 있고 즐찾 되어 있으면 노란 별 -->
+        <div style="margin-left:50px;opacity:0.7;" v-if="isbookmark === true && isLogin===true">
             <img src="@/assets/imgs/yellowstar.png" style="width:25px;" @click="deleteStar()" /> 즐겨찾기
         </div>
 
@@ -123,9 +132,11 @@ export default {
             set: 0,
             isbookmark: false, //북마크 여부
             userInfo: null,
+            isLogin: false,
         });
 
         state.userInfo = computed(() => store.state.userInfo);
+        state.isLogin = computed(() => store.state.isLogin);
 
         // 빵집 한개 데이터 수신
         const handleData = async () => {
@@ -403,21 +414,27 @@ export default {
     position: absolute;
     left: 1000px;
     top: 0px;
-    width: 250px;
-    height: 280px;
+    width: 70px;
+    height: 30px;
     background: yellow;
 }
 
 #review_imgs_box {
     overflow: hidden;
-    width: 1000px;
+    width: 1440px;
     height: 280px;
 }
 
+#review_imgs{
+    width: 50em;
+    height:280px;
+}
+
 #review_imgs_one {
-    width: 250px;
+    width: 100%;
     height: 280px;
     object-fit: cover;
+    margin-left:5px;
     float: left;
 }
 
