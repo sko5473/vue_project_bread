@@ -294,9 +294,10 @@ export default {
 
 /* 홈 wrap */
 #wrap{
-    width:1565px;
-    overflow:hidden;
-    margin:0 auto;
+    width: 1565px;
+    overflow: hidden;
+    margin: 0 auto;
+    padding-top: 56px;
 }
 
 /* 섹션 전체 */

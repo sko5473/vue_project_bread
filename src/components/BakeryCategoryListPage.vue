@@ -251,8 +251,9 @@ export default {
 #wrap {
     width: 1565px;
     position: relative;
-    margin:0 auto;
+    margin: 0 auto;
     margin-bottom: 100px;
+    padding-top: 56px;
 }
 
 /* 왼쪽 바 네비게이터 */

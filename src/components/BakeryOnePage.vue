@@ -123,7 +123,7 @@ export default {
             modalonerows: null,
             smallimgrows: null,
             page: 1,
-            reviewmodal: false, //모달창 출력여부
+            reviewmodal: true, //모달창 출력여부
             reviewfifth: 0, //5번째 리뷰번호(내림차순, 더보기시 실행 용)
             prev: 0, //모달 리뷰 이전번호
             next: 0, //모달 리뷰 이후번호
@@ -388,6 +388,7 @@ export default {
     margin: 0 auto;
     width: 1440px;
     overflow: hidden;
+    padding-top:56px;
 }
 
 .wrapon {
@@ -412,22 +413,35 @@ export default {
 
 #more_img {
     position: absolute;
-    left: 1000px;
-    top: 0px;
-    width: 70px;
-    height: 30px;
-    background: yellow;
+    left: 89%;
+    top: 80%;
+    width: 90px;
+    height: 40px;
+    background: rgb(54, 52, 52);
+    color: white;
+    opacity: 0.8;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 19px;
+    line-height: 40px;
+    cursor: pointer;
+}
+
+#more_img:hover{
+    background:#0f0f0f;
 }
 
 #review_imgs_box {
     overflow: hidden;
-    width: 1440px;
+    width: 100%;
     height: 280px;
 }
 
 #review_imgs{
-    width: 50em;
+    width: 19%;
     height:280px;
+    float:left;
+    margin-left:5px;
 }
 
 #review_imgs_one {
@@ -473,7 +487,7 @@ export default {
     position: absolute;
     left: 50%;
     margin-left: -650px;
-    top: 50px;
+    top: 140px;
 }
 
 #modal_inner_box::after {
@@ -486,6 +500,7 @@ export default {
     top: 0px;
     z-index: -1;
     opacity: 0.8;
+    border-radius: 10px;
 }
 
 /* 모달 창 내 왼쪽이동버튼 */
@@ -521,6 +536,16 @@ export default {
 #modal_left {
     width: 700px;
     height: 650px;
+}
+
+#modal_right {
+    background: white;
+    position: absolute;
+    right: 0;
+    width: 300px;
+    height: 650px;
+    bottom: 0;
+    border-radius: 5px;
 }
 
 #small_img_box_wrap {
@@ -581,12 +606,4 @@ export default {
     user-select: none;
 }
 
-#modal_right {
-    background: white;
-    position: absolute;
-    right: 0;
-    width: 300px;
-    height: 650px;
-    bottom: 0;
-}
 </style>

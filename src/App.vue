@@ -1,7 +1,6 @@
 <template>
   <div id="wrap">
     <menu-page></menu-page>
-    <menu-between-view-margin></menu-between-view-margin>
     <router-view></router-view>
 
     <div id="footer">
@@ -13,13 +12,11 @@
 <script>
 import FooterPage from '@/components/FooterPage.vue';
 import MenuPage from '@/components/MenuPage.vue';
-import MenuBetweenViewMargin from '@/components/MenuBetweenViewMargin.vue';
 
 export default {
   components: {
     FooterPage,
     MenuPage,
-    MenuBetweenViewMargin,
   },
   setup() {
 
