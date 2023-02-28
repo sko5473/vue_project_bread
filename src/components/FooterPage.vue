@@ -3,7 +3,7 @@
         <div id="footer_inner_box">
             <div id="footer_top">
                 <div id="footer_top_left1">
-                    <p>부산 빵지순례</p>
+                    <p id="logo">부산 빵지순례</p>
                 </div>
                 <div id="footer_top_left2">
                     <p>회사소개</p>
@@ -25,8 +25,8 @@
                     <p>문의하기</p>
                 </div>
                 <div id="footer_top_right">
-                    <p>페이스북아이콘</p>
-                    <p>인스타그램아이콘</p>
+                    <div class="link_img_div"><img src="@/assets/imgs/facebook1.png" class="link_img" style="width:37px;padding-top:5px;" alt=""></div>
+                    <div class="link_img_div"><img src="@/assets/imgs/instagram.png" class="link_img" alt=""></div>
                 </div>
             </div>
 
@@ -45,7 +45,7 @@
                     <p>2023 BusanBreadTour Co. All rights reserved.</p>
                 </div>
                 <div id="footer_bottom_right">
-                    <p>한국어 | English | 简体中文</p>
+                    <p style="float:left;font-weight: bold;color:white;">한국어&nbsp;</p><span> | English | 简体中文</span>
                 </div>
             </div>
         </div>
@@ -75,22 +75,94 @@ export default {
     width:1440px;
     position:relative;
     margin-left:200px;
-    margin-top:50px;
+    margin-top:20px;
 }
 
 #footer_top{
-    background-color: aqua;
+    border-bottom: 1px solid rgb(206, 203, 203);
+}
+
+/* 부모를 한줄 가득차게하여 float:left시 밑에 내용이 위로 올라오지 않도록 해준다. */
+#footer_top::after{
+    content: ""; /*빈내용 */
+    clear: both;
+    display: block;
+}
+
+#footer_top p {
+    padding: 0;
 }
 
 #footer_top_left1{
     float:left;
+    
+}
+
+#logo{
+    color:white;
+    font-size:22px;
+    font-family: custom_font1;
 }
 
 #footer_top_left2{
     float:left;
+    margin-left:180px;
 }
 
 #footer_top_left3{
     float:left;
+    margin-left:180px;
+}
+
+#footer_top_left2 p,#footer_top_left3 p {
+    margin-bottom: 10px;
+    color: rgb(206, 203, 203);
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+#footer_top_right{
+    float:left;
+    margin-left:200px;    
+}
+
+.link_img{
+    width:50px;
+    filter: opacity(0.4) drop-shadow(0 0 0 rgb(128, 128, 121)); 
+    margin-left:20px;
+}
+
+.link_img_div{
+    float:left;
+}
+
+#footer_middle{
+    color: rgb(206, 203, 203);
+    margin-top:20px;
+    margin-bottom:15px;
+    height:45px;
+    border-bottom: 1px solid rgb(206, 203, 203);
+}
+
+#footer_bottom{
+
+}
+
+#footer_bottom_left{
+    color: rgb(206, 203, 203);
+    float: left;
+    margin-top: 15px;
+}
+
+#footer_bottom_left p{
+    margin: 0;
+    margin-bottom:5px;
+}
+
+#footer_bottom_right{
+    color: rgb(206, 203, 203);
+    float: left;
+    margin-left:600px;
+    margin-top:30px;
+    font-size:18px;
 }
 </style>
