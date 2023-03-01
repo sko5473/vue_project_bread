@@ -1,5 +1,5 @@
 <template>
-    <div id="footer_wrap">
+    <div id="footer_wrap" v-if="state.isModal==false">
         <div id="footer_inner_box">
             <div id="footer_top">
                 <div id="footer_top_left1">
@@ -53,11 +53,22 @@
 </template>
 
 <script>
+import { reactive, computed } from 'vue';
+import { useStore } from 'vuex';
+
 export default {
     setup() {
+        const store = useStore();
+        
+        const state = reactive({
+            isModal : false,
+        });
 
+        state.isModal = computed(() => store.state.isModal);
 
-        return {}
+        return {
+            state
+        }
     }
 }
 </script>

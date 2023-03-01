@@ -8,6 +8,7 @@ export default createStore({
         isLogin: false,
         userInfo: null,
         isAdmin: false,
+        isModal: false,
     },
     getters: {},
     mutations: {
@@ -22,7 +23,17 @@ export default createStore({
             state.isLogin = false
             state.userInfo = null
             state.isAdmin = false
+        },
+
+        //상점 모달창 켜졌을 때 메뉴바, 푸터를 display:none 한다.
+        modalTrueMode(state){
+            state.isModal = true
+        },
+
+        modalFalseMode(state){
+            state.isModal = false
         }
+
     },
 
     actions: {

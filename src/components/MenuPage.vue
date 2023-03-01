@@ -1,5 +1,5 @@
 <template>
-    <nav id="menuWrap" class="navbar navbar-expand-lg bg-light">
+    <nav id="menuWrap" class="navbar navbar-expand-lg bg-light" v-if="state.isModal==false">
         <div class="container-fluid">
             <a class="navbar-brand logo" href="/">부산 빵지순례</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -59,12 +59,14 @@ export default {
         const state = reactive({
             on: false,
             keyword: "",
+            isModal: false,
         });
 
         // vuex로부터 isLogin값을 받아온다.
         const isLogin = computed(()=> store.state.isLogin); //로그인유무 vuex에서 가져온다.
         const userInfo = computed(() => store.state.userInfo); //유저 데이터 vuex에서 가져온다.
         const isAdmin = computed(() => store.state.isAdmin); //관리자유무 vuex에서 가져온다.
+        state.isModal = computed(() => store.state.isModal); //모달상태를 받아온다.
 
         //프로필 클릭시 모달창 조작
         const handleModal = () => {

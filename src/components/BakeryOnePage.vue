@@ -21,16 +21,16 @@
                     <Close />
                 </el-icon></div>
             <div id="modal_inner_box">
-                <el-icon id="left_btn" @click="prevreview()" color="#ffffff" :size="60">
+                <el-icon id="left_btn" @click="prevreview()" color="rgb(206, 203, 203)" :size="60">
                     <ArrowLeftBold />
                 </el-icon>
-                <el-icon id="right_btn" @click="nextreview()" color="#ffffff" :size="60">
+                <el-icon id="right_btn" @click="nextreview()" color="rgb(206, 203, 203)" :size="60">
                     <ArrowRightBold />
                 </el-icon>
-                <el-icon id="bottom_left_btn" @click="modalsmallimgdataprev()" color="#ffffff" :size="25">
+                <el-icon id="bottom_left_btn" @click="modalsmallimgdataprev()" color="rgb(206, 203, 203)" :size="25">
                     <ArrowLeftBold />
                 </el-icon>
-                <el-icon id="bottom_right_btn" @click="modalsmallimgdatanext()" color="#ffffff" :size="25">
+                <el-icon id="bottom_right_btn" @click="modalsmallimgdatanext()" color="rgb(206, 203, 203)" :size="25">
                     <ArrowRightBold />
                 </el-icon>
 
@@ -49,28 +49,59 @@
                     </div>
                 </div>
                 <div id="modal_right" v-if="modalonerows">
-                    <div>작성자:{{ modalonerows.writer }}</div>
-                    <div>평점:{{ modalonerows.point }}</div>
-                    <div>내용:{{ modalonerows.content }}</div>
-                    <div>작성일:{{ modalonerows.regdate1 }}</div>
+                    <div id="modal_right_content_wrap">
+                        <div id="modal_right_shopname">
+                            <div class="modal_right_content">{{ rows.name }}</div>
+                        </div>
+                        <div id="modal_right_content_wrap_box">
+                            <div class="modal_right_content" style="font-size:20px;float:left;">{{ modalonerows.writer }}</div>
+                            <div id="star_content" style="position:absolute; right:15px;">
+                                <div class="modal_right_content" v-if="modalonerows.point==1">
+                                    <span id="fill_star">★</span>
+                                    <span id="empty_star">★★★★</span>
+                                </div>
+                                <div class="modal_right_content" v-if="modalonerows.point==2">
+                                    <span id="fill_star">★★</span>
+                                    <span id="empty_star">★★★</span>
+                                </div>
+                                <div class="modal_right_content" v-if="modalonerows.point==3">
+                                    <span id="fill_star">★★★</span>
+                                    <span id="empty_star">★★</span>
+                                </div>
+                                <div class="modal_right_content" v-if="modalonerows.point==4">
+                                    <span id="fill_star">★★★★</span>
+                                    <span id="empty_star">★</span>
+                                </div>
+                                <div class="modal_right_content" v-if="modalonerows.point==5">
+                                    <span id="fill_star">★★★★★</span>
+                                    <span id="empty_star"></span>
+                                </div>
+                            </div>
+                            <div style="position:absolute;left:0;margin-top:80px;">
+                                <div class="modal_right_content">{{ modalonerows.content }}</div>
+                                <div class="modal_right_content" style="margin-top:20px;">{{ modalonerows.regdate1 }}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div style="float:left;margin-left:20px;"><el-button @click="moveReviewWrite()">리뷰쓰기</el-button></div>
 
+        <div style="float:left;margin-left:20px;"><el-button @click="moveReviewWrite()">리뷰쓰기</el-button></div>
+        
         <!-- 비로그인 일 때 빈 별 -->
         <div style="margin-left:50px;opacity:0.7;" v-if="isLogin===false">
-            <img src="@/assets/imgs/star.png" style="width:25px;"/> 즐겨찾기
+            <span id="empty_star" style="font-size:40px;cursor: pointer;">★</span>
         </div>
 
         <!-- 로그인 되어 있고 즐찾 안되어 있을때 빈 별 -->
         <div style="margin-left:50px;opacity:0.7;" v-if="isbookmark === false && isLogin===true">
-            <img src="@/assets/imgs/star.png" style="width:25px;" @click="updateStar()" /> 즐겨찾기
+            <span id="empty_star" @click="updateStar()" style="font-size:40px;cursor: pointer;">★</span>
         </div>
 
         <!-- 로그인 되어 있고 즐찾 되어 있으면 노란 별 -->
         <div style="margin-left:50px;opacity:0.7;" v-if="isbookmark === true && isLogin===true">
-            <img src="@/assets/imgs/yellowstar.png" style="width:25px;" @click="deleteStar()" /> 즐겨찾기
+            <span id="fill_star" @click="deleteStar()" style="font-size:40px;cursor: pointer;">★</span>
         </div>
 
         <br />
@@ -108,6 +139,7 @@ import axios from 'axios';
 import { onMounted, reactive, toRefs, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { watch } from '@vue/runtime-core';
 
 export default {
     setup() {
@@ -123,7 +155,7 @@ export default {
             modalonerows: null,
             smallimgrows: null,
             page: 1,
-            reviewmodal: true, //모달창 출력여부
+            reviewmodal: false, //모달창 출력여부
             reviewfifth: 0, //5번째 리뷰번호(내림차순, 더보기시 실행 용)
             prev: 0, //모달 리뷰 이전번호
             next: 0, //모달 리뷰 이후번호
@@ -133,11 +165,26 @@ export default {
             isbookmark: false, //북마크 여부
             userInfo: null,
             isLogin: false,
+            isModal: false,
         });
 
         state.userInfo = computed(() => store.state.userInfo);
         state.isLogin = computed(() => store.state.isLogin);
+        state.isModal = computed(() => store.state.isModal);
 
+        // 모달상태 변경(true,false)을 감지해서 true면 store의 isModal값을 true하여 메뉴바와 푸터를 display:none한다.
+        watch(
+            ()=> state.reviewmodal,
+            ()=>{
+                if(state.reviewmodal==true){
+                    store.commit("modalTrueMode");
+                } else{
+                    store.commit("modalFalseMode");
+                }
+            },
+            {deep:true}
+        );
+    
         // 빵집 한개 데이터 수신
         const handleData = async () => {
             const url = `/api/bakery/bakeryone.json?_id=${state.no}`;
@@ -475,91 +522,129 @@ export default {
 }
 
 #close_btn {
-    position: absolute;
-    right: 30px;
-    top: 30px;
+    position: fixed;
+    right: 2%;
+    top: 3%;
     cursor: pointer;
 }
 
 #modal_inner_box {
-    width: 1300px;
-    height: 650px;
-    position: absolute;
-    left: 50%;
-    margin-left: -650px;
-    top: 140px;
+    width: 90%;
+    height: 90%;
+    position: fixed;
+    left: 5%;
+    /* margin-left: -650px; */
+    top: 5%;
 }
 
 #modal_inner_box::after {
     background-color: black;
-    width: 1300px;
-    height: 650px;
+    width: 90%;
+    height: 90%;
     content: "";
-    position: absolute;
-    left: 0;
-    top: 0px;
+    position: fixed;
+    left: 5%;
+    top: 5%;
     z-index: -1;
     opacity: 0.8;
     border-radius: 10px;
 }
 
+#modal_left {
+    width: 80%;
+    height: 90%;
+}
+
+/* 모달 우측 전체 박스 */
+#modal_right {
+    background: white;
+    position: fixed;
+    right: 5%;
+    width: 20%;
+    height: 90%;
+    bottom: 5%;
+    border-radius: 5px;
+}
+
+/* 모달우측 박스묶음 */
+#modal_right_content_wrap{
+    position: relative;
+}
+
+
+#modal_right_shopname{
+    border-bottom: 1px solid #cccccc;
+}
+
+#modal_right_content_wrap_box{
+    position: relative;
+}
+
+/* 모달우측 내용 */
+.modal_right_content{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-left: 10px;
+}
+
+#fill_star{
+  -webkit-text-stroke-width: 1.5px;
+  -webkit-text-stroke-color: #2b2a29;
+  -webkit-text-fill-color: gold;
+  font-size: 20px;
+}
+
+#empty_star{
+  -webkit-text-fill-color: transparent; 
+  -webkit-text-stroke-width: 1.5px;
+  -webkit-text-stroke-color: #2b2a29;
+  font-size: 20px;
+}
+
 /* 모달 창 내 왼쪽이동버튼 */
 #left_btn {
     position: absolute;
-    top: 270px;
-    left: 180px;
+    top: 43%;
+    left: 2%;
     cursor: pointer;
 }
 
 /* 모달 창 내 오른쪽이동버튼 */
 #right_btn {
     position: absolute;
-    top: 270px;
-    right: 480px;
+    top: 43%;
+    right: 24%;
     cursor: pointer;
 }
 
-#bottom_left_btn {
+#modal_big_img {
+    width: 64%;
+    height: 75%;
     position: absolute;
-    bottom: 42px;
-    left: 15px;
-    cursor: pointer;
-}
+    top: 6%;
+    left: 7%;
+    object-fit: cover;
 
-#bottom_right_btn {
-    position: absolute;
-    bottom: 42px;
-    right: 310px;
-    cursor: pointer;
-}
-
-#modal_left {
-    width: 700px;
-    height: 650px;
-}
-
-#modal_right {
-    background: white;
-    position: absolute;
-    right: 0;
-    width: 300px;
-    height: 650px;
-    bottom: 0;
-    border-radius: 5px;
+    /* 블록선택 막기 */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #small_img_box_wrap {
-    width: 910px;
-    height: 90px;
-    position: absolute;
-    bottom: 10px;
-    left: 45px;
+    width: 64%;
+    height: 20%;
 }
 
 #small_img_box {
     width: 100%;
-    height: 90px;
+    height: 100%;
     overflow: hidden;
+    position: absolute;
+    top: 85%;
+    left: 7%;
 }
 
 .modal_small_img {
@@ -580,30 +665,26 @@ export default {
     user-select: none;
 }
 
+#bottom_left_btn {
+    position: absolute;
+    top: 90%;
+    left: 4%;
+    cursor: pointer;
+}
+
+#bottom_right_btn {
+    position: absolute;
+    top: 90%;
+    right: 26%;
+    cursor: pointer;
+}
+
 .on {
     opacity: 1;
 }
 
 .off {
     opacity: 0.5;
-}
-
-#modal_big_img {
-    width: 400px;
-    height: 400px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin: -250px 0 0 -350px;
-    object-fit: cover;
-
-    /* 블록선택 막기 */
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 </style>
