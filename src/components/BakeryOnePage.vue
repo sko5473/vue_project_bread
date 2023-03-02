@@ -54,25 +54,26 @@
                             <div class="modal_right_content">{{ rows.name }}</div>
                         </div>
                         <div id="modal_right_content_wrap_box">
-                            <div class="modal_right_content" style="font-size:20px;float:left;">{{ modalonerows.writer }}</div>
+                            <div class="modal_right_content" style="font-size:20px;float:left;">{{ modalonerows.writer }}
+                            </div>
                             <div id="star_content" style="position:absolute; right:15px;">
-                                <div class="modal_right_content" v-if="modalonerows.point==1">
+                                <div class="modal_right_content" v-if="modalonerows.point == 1">
                                     <span id="fill_star">★</span>
                                     <span id="empty_star">★★★★</span>
                                 </div>
-                                <div class="modal_right_content" v-if="modalonerows.point==2">
+                                <div class="modal_right_content" v-if="modalonerows.point == 2">
                                     <span id="fill_star">★★</span>
                                     <span id="empty_star">★★★</span>
                                 </div>
-                                <div class="modal_right_content" v-if="modalonerows.point==3">
+                                <div class="modal_right_content" v-if="modalonerows.point == 3">
                                     <span id="fill_star">★★★</span>
                                     <span id="empty_star">★★</span>
                                 </div>
-                                <div class="modal_right_content" v-if="modalonerows.point==4">
+                                <div class="modal_right_content" v-if="modalonerows.point == 4">
                                     <span id="fill_star">★★★★</span>
                                     <span id="empty_star">★</span>
                                 </div>
-                                <div class="modal_right_content" v-if="modalonerows.point==5">
+                                <div class="modal_right_content" v-if="modalonerows.point == 5">
                                     <span id="fill_star">★★★★★</span>
                                     <span id="empty_star"></span>
                                 </div>
@@ -87,49 +88,111 @@
             </div>
         </div>
 
-        <div style="float:left;margin-left:20px;"><el-button @click="moveReviewWrite()">리뷰쓰기</el-button></div>
-        
-        <!-- 비로그인 일 때 빈 별 -->
-        <div style="margin-left:50px;opacity:0.7;" v-if="isLogin===false">
-            <span id="empty_star" style="font-size:40px;cursor: pointer;">★</span>
-        </div>
+        <div id="left_wrap">
+            <div id="left_top" v-if="rows">
+                <div id="shop_name">{{ rows.name }}</div>
+                <div id="shop_point">{{ rows.point }}</div>
+                <div id="left_top_right">
+                    <div><img src="@/assets/imgs/writing.png" @click="moveReviewWrite()" id="review_write_img"/></div>
+                     <!-- 비로그인 일 때 빈 별 -->
+                    <div style="opacity:0.7;line-height: 38px;" v-if="isLogin === false">
+                        <div id="empty_star" style="font-size:40px;cursor: pointer;">★</div>
+                    </div>
 
-        <!-- 로그인 되어 있고 즐찾 안되어 있을때 빈 별 -->
-        <div style="margin-left:50px;opacity:0.7;" v-if="isbookmark === false && isLogin===true">
-            <span id="empty_star" @click="updateStar()" style="font-size:40px;cursor: pointer;">★</span>
-        </div>
+                    <!-- 로그인 되어 있고 즐찾 안되어 있을때 빈 별 -->
+                    <div style="opacity:0.7;line-height: 38px;" v-if="isbookmark === false && isLogin === true">
+                        <div id="empty_star" @click="updateStar()" style="font-size:40px;cursor: pointer;">★</div>
+                    </div>
 
-        <!-- 로그인 되어 있고 즐찾 되어 있으면 노란 별 -->
-        <div style="margin-left:50px;opacity:0.7;" v-if="isbookmark === true && isLogin===true">
-            <span id="fill_star" @click="deleteStar()" style="font-size:40px;cursor: pointer;">★</span>
-        </div>
-
-        <br />
-        <!-- 본문 -->
-        <div v-if="rows">
-            <div style="float:left;"><img src="@/assets/imgs/writing.png" style="width:30px;" />{{ rows.reviewcount }}
+                    <!-- 로그인 되어 있고 즐찾 되어 있으면 노란 별 -->
+                    <div style="opacity:0.7;line-height: 38px;" v-if="isbookmark === true && isLogin === true">
+                        <div id="fill_star" @click="deleteStar()" style="font-size:40px;cursor: pointer;">★</div>
+                    </div>
+                </div>
+                <div style="margin-left:565px;">
+                    <div style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:12px;float:left;color:gray;margin-right:25px;">리뷰쓰기</div>
+                    <div style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:12px;color:gray;">즐겨찾기</div>
+                </div>
+                <div id="left_top_1">
+                    <div style="float:left;">
+                        <img src="@/assets/imgs/writing.png" style="width:20px;opacity:0.7;margin-bottom:2px;" />
+                        <label for="" style="color:gray;">{{ rows.reviewcount }}</label>
+                    </div>
+                    
+                    <div style="margin-left:50px;opacity:0.7;">
+                        <img src="@/assets/imgs/star.png" style="width:15px;opacity:0.7;margin-bottom:3px;" />
+                        <label for="" style="margin-left: 5px;">{{rows.bookmarkcount}}</label>
+                    </div>
+                </div>
             </div>
-            <div style="margin-left:50px;opacity:0.7;"><img src="@/assets/imgs/star.png" style="width:25px;" />{{
-                rows.bookmarkcount
-            }}</div>
-            <br />
-            <div>평점 : {{ rows.point }}</div>
-            <div>가게명 : {{ rows.name }}</div>
-            <div>주소 : {{ rows.address }}</div>
-            <div>메뉴 : {{ rows.menu }}</div>
-            <div>가격 : {{ rows.price }}</div>
-            <div>강점 : {{ rows.strength }}</div>
-            <div>휴일 : {{ rows.holiday }}</div>
-        </div>
 
-        <!-- 리뷰영역 -->
-        <div id="reviewzone" v-for="data of reviewrows" :key="data">
-            <h3>리뷰영역</h3>
-            <div>작성일:{{ data.regdate1 }}</div>
-            <div>작성자:{{ data.writer }}</div>
-            <div>평점:{{ data.point }}</div>
-            <div>내용:{{ data.content }}</div>
-            <div><img id="review_img" :src="data.imageurl" alt="" /></div>
+            <!-- 본문 -->
+            <div v-if="rows" id="content_wrap">
+                <div>
+                    <label for="" class="content_lbl">주소</label>
+                    <div class="content_content">{{ rows.address }}</div>
+                </div>
+                <div>
+                    <label for="" class="content_lbl">메뉴</label>
+                    <div  class="content_content">{{ rows.menu }}</div>
+                </div>
+                <div>
+                    <label for="" class="content_lbl">가격</label>
+                    <div class="content_content">{{ rows.price }}</div>
+                </div>
+                <div>
+                    <label for="" class="content_lbl">강점</label>
+                    <div class="content_content">{{ rows.strength }}</div>
+                </div>
+                <div>
+                    <label for="" class="content_lbl">휴일</label>
+                    <div class="content_content">{{ rows.holiday }}</div>
+                </div>
+            </div>
+
+            <!-- 리뷰영역 -->
+            <div style="font-family: custom_font2;margin-bottom:30px;margin-top:20px;">리뷰({{ reviewtotal }})</div>
+            <div id="reviewzone" v-for="data of reviewrows" :key="data">
+
+                <div id="reviewzone_left">
+                    <div>{{ data.writer }}</div>
+                </div>
+                <div id="reviewzone_content">
+                    <div style="color:gray;font-family: custom_font2;font-size:13px;margin-bottom:10px;">{{ data.regdate1 }}</div>
+                    <div style="font-family: custom_font2;">내용:{{ data.content }}</div>
+                    <div id="reviewzone_bottom">
+                        <img id="review_img" :src="data.imageurl"/>
+                    </div>
+                </div>
+                <div id="reviewzone_right">
+                    <div class="modal_right_content" v-if=" data.point == 1">
+                        <span id="fill_star">★</span>
+                        <span id="empty_star">★★★★</span>
+                    </div>
+                    <div class="modal_right_content" v-if=" data.point == 2">
+                        <span id="fill_star">★★</span>
+                        <span id="empty_star">★★★</span>
+                    </div>
+                    <div class="modal_right_content" v-if=" data.point == 3">
+                        <span id="fill_star">★★★</span>
+                        <span id="empty_star">★★</span>
+                    </div>
+                    <div class="modal_right_content" v-if=" data.point == 4">
+                        <span id="fill_star">★★★★</span>
+                        <span id="empty_star">★</span>
+                    </div>
+                    <div class="modal_right_content" v-if=" data.point == 5">
+                        <span id="fill_star">★★★★★</span>
+                        <span id="empty_star"></span>
+                    </div>
+                </div>
+            </div>
+            <el-pagination layout="prev, pager, next" :total="reviewtotal" @current-change="handlePage" 
+            style="margin: 20px 0;margin-left: 320px;" page-size="5"/>
+        </div>
+        <div id="right_wrap">
+
+
         </div>
     </div>
 </template>
@@ -166,6 +229,7 @@ export default {
             userInfo: null,
             isLogin: false,
             isModal: false,
+            reviewtotal: 0, //리뷰 총 개수(페이지네이션 용)
         });
 
         state.userInfo = computed(() => store.state.userInfo);
@@ -174,23 +238,23 @@ export default {
 
         // 모달상태 변경(true,false)을 감지해서 true면 store의 isModal값을 true하여 메뉴바와 푸터를 display:none한다.
         watch(
-            ()=> state.reviewmodal,
-            ()=>{
-                if(state.reviewmodal==true){
+            () => state.reviewmodal,
+            () => {
+                if (state.reviewmodal == true) {
                     store.commit("modalTrueMode");
-                } else{
+                } else {
                     store.commit("modalFalseMode");
                 }
             },
-            {deep:true}
+            { deep: true }
         );
-    
+
         // 빵집 한개 데이터 수신
         const handleData = async () => {
             const url = `/api/bakery/bakeryone.json?_id=${state.no}`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
-            console.log('값',data);
+            console.log('값', data);
 
             if (data.status === 200) {
                 state.rows = data.result;
@@ -240,7 +304,7 @@ export default {
         }
 
         //노란즐겨찾기 클릭시 해당 상점 즐겨찾기 카운트 1감소
-        const deleteStar = async() => {
+        const deleteStar = async () => {
             const url = `/api/bakery/updatebookmarkcountdown.json?_id=${state.no}`;
             const headers = { "Content-Type": "application/json" };
             const body = {};
@@ -250,7 +314,7 @@ export default {
             }
         };
 
-        
+
         //나의 즐겨찾기에서 삭제
         const deleteStarContent = async () => {
             const url = `/api/mybookmark/deletemybookmark.json?_id=${state.no}`;
@@ -275,7 +339,14 @@ export default {
 
             if (data.status === 200) {
                 state.reviewrows = data.result;
+                state.reviewtotal = data.total;
             }
+        };
+
+        //리뷰 페이지네이션 페이지 이동
+        const handlePage = (page) => {
+            state.page = page;
+            reviewdata();
         };
 
         // 내림차순 5번째 리뷰번호 받기
@@ -424,33 +495,101 @@ export default {
             highlight,
             updateStar,
             deleteStar,
+            handlePage,
         }
     }
 }
 </script>
 
 <style lang="css" scoped>
-
 #bakeryone_wrap {
     margin: 0 auto;
     width: 1440px;
     overflow: hidden;
-    padding-top:56px;
+    padding-top: 56px;
 }
 
+/* 좌측 wrap */
+#left_wrap {
+    width: 1000px;
+    overflow: hidden;
+    float: left;
+    padding-left:140px;
+    padding-top:60px;
+}
+
+/* 우측 wrap */
+#right_wrap {
+    width: 400px;
+    background-color: #cccccc;
+    height: 1000px;
+    float: left;
+    margin-top: 5px;
+    margin-left: 40px;
+}
+
+#left_top{
+    position: relative; 
+    border-bottom: 1px solid #cccccc;  
+    height: 100px; 
+}
+
+#left_top_1{
+    position: absolute;
+    top: 60px;
+}
+
+/* 가게명 */
+#shop_name {
+    font-family: custom_font2;
+    font-size: 28px;
+    float: left;
+}
+
+/* 가게 평점 */
+#shop_point {
+    font-family: custom_font2;
+    font-size: 26px;
+    color: rgb(255, 115, 0);
+    float: left;
+    margin-left: 30px;
+}
+
+#left_top_right{
+    margin-left: 570px;
+    z-index:-2;
+}
+
+#left_top_right::after{
+    content: ""; /*빈내용 */
+    clear: both;
+    display: block;
+}
+
+/* 내용 */
+#content_wrap{
+    border-bottom: 1px solid #cccccc;  
+    padding: 30px 0;
+}
+
+.content_lbl{
+    width: 100px;
+    float: left;
+    color: gray;
+    font-family: custom_font2;
+}
+
+.content_content{
+    font-family: custom_font2;
+    margin-bottom: 10px;
+}
 .wrapon {
     position: fixed;
 }
 
-#reviewzone {
-    background: #cccccc;
-    width: 500px;
-    height: 500px;
-}
-
 #review_img {
-    width: 300px;
-    height: 300px;
+    width: 120px;
+    height: 120px;
     object-fit: cover;
 }
 
@@ -460,7 +599,7 @@ export default {
 
 #more_img {
     position: absolute;
-    left: 89%;
+    left: 92%;
     top: 80%;
     width: 90px;
     height: 40px;
@@ -474,8 +613,8 @@ export default {
     cursor: pointer;
 }
 
-#more_img:hover{
-    background:#0f0f0f;
+#more_img:hover {
+    background: #0f0f0f;
 }
 
 #review_imgs_box {
@@ -484,19 +623,28 @@ export default {
     height: 280px;
 }
 
-#review_imgs{
-    width: 19%;
-    height:280px;
-    float:left;
-    margin-left:5px;
+#review_imgs {
+    width: 19.6%;
+    height: 280px;
+    float: left;
+    margin-left: 5px;
 }
 
 #review_imgs_one {
     width: 100%;
     height: 280px;
     object-fit: cover;
-    margin-left:5px;
+    margin-left: 5px;
     float: left;
+}
+
+#review_write_img{
+    width: 50px;
+    opacity: 0.6;
+    float: left;
+    margin-right: 20px;
+    cursor: pointer;
+    z-index: 2;
 }
 
 /* 모달전체 박스 */
@@ -533,7 +681,6 @@ export default {
     height: 90%;
     position: fixed;
     left: 5%;
-    /* margin-left: -650px; */
     top: 5%;
 }
 
@@ -567,37 +714,37 @@ export default {
 }
 
 /* 모달우측 박스묶음 */
-#modal_right_content_wrap{
+#modal_right_content_wrap {
     position: relative;
 }
 
 
-#modal_right_shopname{
+#modal_right_shopname {
     border-bottom: 1px solid #cccccc;
 }
 
-#modal_right_content_wrap_box{
+#modal_right_content_wrap_box {
     position: relative;
 }
 
 /* 모달우측 내용 */
-.modal_right_content{
+.modal_right_content {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin-left: 10px;
 }
 
-#fill_star{
-  -webkit-text-stroke-width: 1.5px;
-  -webkit-text-stroke-color: #2b2a29;
-  -webkit-text-fill-color: gold;
-  font-size: 20px;
+#fill_star {
+    -webkit-text-stroke-width: 1.5px;
+    -webkit-text-stroke-color: #2b2a29;
+    -webkit-text-fill-color: gold;
+    font-size: 20px;
 }
 
-#empty_star{
-  -webkit-text-fill-color: transparent; 
-  -webkit-text-stroke-width: 1.5px;
-  -webkit-text-stroke-color: #2b2a29;
-  font-size: 20px;
+#empty_star {
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke-width: 1.5px;
+    -webkit-text-stroke-color: #2b2a29;
+    font-size: 20px;
 }
 
 /* 모달 창 내 왼쪽이동버튼 */
@@ -687,4 +834,26 @@ export default {
     opacity: 0.5;
 }
 
+#reviewzone {
+    width: 860px;
+    overflow: hidden;
+    margin-top: 20px;
+    border-bottom: 1px solid #cccccc;
+
+}
+
+#reviewzone_left{
+    float: left;
+}
+
+#reviewzone_content{
+    float: left;
+    width: 550px;
+    margin-left: 30px;
+}
+
+#reviewzone_bottom{
+    margin: 20px 0;
+    
+}
 </style>
