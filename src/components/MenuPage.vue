@@ -35,7 +35,6 @@
                         </li>
                         <li><a class="dropdown-item" href="/mypage" v-if="isLogin === true">나의정보</a></li>
                         <li><a class="dropdown-item" href="/admin" v-if="isAdmin === true">관리자페이지</a></li>
-                        {{ userInfo }}
                     </ul>
                 </li>
             </div>
@@ -116,6 +115,7 @@ export default {
 }
 
 /* 메뉴페이지 부모 nav */
+@media (max-width: 768px) {
 #menuWrap {
     width: 1565px;
     margin: 0 auto;
@@ -123,6 +123,18 @@ export default {
     z-index:2;
     left:0;
     right:0;
+}
+}
+
+@media (min-width: 768px) {
+    #menuWrap {
+        width: 100%;
+        margin: 0 auto;
+        position: fixed;
+        z-index:2;
+        left:0;
+        right:0;
+    }
 }
 
 .logo {

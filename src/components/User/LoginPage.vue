@@ -145,7 +145,7 @@ export default {
     margin: 0 auto;
     overflow: hidden;
     padding-left: 450px;
-    padding-top: 100px;
+    padding-top: 150px;
     padding-bottom: 200px;
 }
 

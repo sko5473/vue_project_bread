@@ -125,6 +125,7 @@ export default {
     width: 1440px;
     margin: 0 auto;
     overflow: hidden;
+    padding-top: 56px;
 }
 
 #left_menu {

@@ -93,8 +93,8 @@
                 <div id="shop_name">{{ rows.name }}</div>
                 <div id="shop_point">{{ rows.point }}</div>
                 <div id="left_top_right">
-                    <div><img src="@/assets/imgs/writing.png" @click="moveReviewWrite()" id="review_write_img"/></div>
-                     <!-- 비로그인 일 때 빈 별 -->
+                    <div><img src="@/assets/imgs/writing.png" @click="moveReviewWrite()" id="review_write_img" /></div>
+                    <!-- 비로그인 일 때 빈 별 -->
                     <div style="opacity:0.7;line-height: 38px;" v-if="isLogin === false">
                         <div id="empty_star" style="font-size:40px;cursor: pointer;">★</div>
                     </div>
@@ -110,18 +110,22 @@
                     </div>
                 </div>
                 <div style="margin-left:565px;">
-                    <div style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:12px;float:left;color:gray;margin-right:25px;">리뷰쓰기</div>
-                    <div style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:12px;color:gray;">즐겨찾기</div>
+                    <div
+                        style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:12px;float:left;color:gray;margin-right:25px;">
+                        리뷰쓰기</div>
+                    <div
+                        style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:12px;color:gray;">
+                        즐겨찾기</div>
                 </div>
                 <div id="left_top_1">
                     <div style="float:left;">
                         <img src="@/assets/imgs/writing.png" style="width:20px;opacity:0.7;margin-bottom:2px;" />
                         <label for="" style="color:gray;">{{ rows.reviewcount }}</label>
                     </div>
-                    
+
                     <div style="margin-left:50px;opacity:0.7;">
                         <img src="@/assets/imgs/star.png" style="width:15px;opacity:0.7;margin-bottom:3px;" />
-                        <label for="" style="margin-left: 5px;">{{rows.bookmarkcount}}</label>
+                        <label for="" style="margin-left: 5px;">{{ rows.bookmarkcount }}</label>
                     </div>
                 </div>
             </div>
@@ -134,7 +138,7 @@
                 </div>
                 <div>
                     <label for="" class="content_lbl">메뉴</label>
-                    <div  class="content_content">{{ rows.menu }}</div>
+                    <div class="content_content">{{ rows.menu }}</div>
                 </div>
                 <div>
                     <label for="" class="content_lbl">가격</label>
@@ -158,40 +162,42 @@
                     <div>{{ data.writer }}</div>
                 </div>
                 <div id="reviewzone_content">
-                    <div style="color:gray;font-family: custom_font2;font-size:13px;margin-bottom:10px;">{{ data.regdate1 }}</div>
+                    <div style="color:gray;font-family: custom_font2;font-size:13px;margin-bottom:10px;">{{ data.regdate1 }}
+                    </div>
                     <div style="font-family: custom_font2;">내용:{{ data.content }}</div>
                     <div id="reviewzone_bottom">
-                        <img id="review_img" :src="data.imageurl"/>
+                        <img id="review_img" :src="data.imageurl" />
                     </div>
                 </div>
                 <div id="reviewzone_right">
-                    <div class="modal_right_content" v-if=" data.point == 1">
+                    <div class="modal_right_content" v-if="data.point == 1">
                         <span id="fill_star">★</span>
                         <span id="empty_star">★★★★</span>
                     </div>
-                    <div class="modal_right_content" v-if=" data.point == 2">
+                    <div class="modal_right_content" v-if="data.point == 2">
                         <span id="fill_star">★★</span>
                         <span id="empty_star">★★★</span>
                     </div>
-                    <div class="modal_right_content" v-if=" data.point == 3">
+                    <div class="modal_right_content" v-if="data.point == 3">
                         <span id="fill_star">★★★</span>
                         <span id="empty_star">★★</span>
                     </div>
-                    <div class="modal_right_content" v-if=" data.point == 4">
+                    <div class="modal_right_content" v-if="data.point == 4">
                         <span id="fill_star">★★★★</span>
                         <span id="empty_star">★</span>
                     </div>
-                    <div class="modal_right_content" v-if=" data.point == 5">
+                    <div class="modal_right_content" v-if="data.point == 5">
                         <span id="fill_star">★★★★★</span>
                         <span id="empty_star"></span>
                     </div>
                 </div>
             </div>
-            <el-pagination layout="prev, pager, next" :total="reviewtotal" @current-change="handlePage" 
-            style="margin: 20px 0;margin-left: 320px;" page-size="5"/>
+            <el-pagination layout="prev, pager, next" :total="reviewtotal" @current-change="handlePage"
+                style="margin: 20px 0;margin-left: 320px;" :page-size="5" />
         </div>
         <div id="right_wrap">
-
+            <!-- 카카오맵 -->
+            <div id="map"></div>
 
         </div>
     </div>
@@ -230,6 +236,9 @@ export default {
             isLogin: false,
             isModal: false,
             reviewtotal: 0, //리뷰 총 개수(페이지네이션 용)
+            starUrl: null,
+            reviewUrl: null,
+            iconname: '',
         });
 
         state.userInfo = computed(() => store.state.userInfo);
@@ -475,12 +484,112 @@ export default {
             }
         };
 
+        //지도 설정
+        const initMap = async() => {
+            const url = `/api/icon/selecticon.json?text=${state.iconname}`;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+            console.log("아이콘 데이터 확인", data);
+
+            if (data.status === 200) {
+                state.starUrl = data.result[0].imageurl;
+                state.reviewUrl = data.result[1].imageurl;
+            }
+
+            const mapContainer = document.getElementById('map'); // 지도를 표시할 div 
+            const mapOption = {
+                center: new window.kakao.maps.LatLng(state.rows.lat, state.rows.lng), //지도의 중심좌표
+                level: 4, //지도 확대 레벨
+            }
+            // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+            const map = new window.kakao.maps.Map(mapContainer, mapOption);
+
+            const overlay = new Array(); //오버레이를 담을 배열 생성
+            const marker = new Array(); // 마커를 담을 배열 생성
+
+            var position = new window.kakao.maps.LatLng(state.rows.lat, state.rows.lng); //DB에 저장된 위도, 경도 위치값을 담음
+
+            var markers = new window.kakao.maps.Marker({ //마커 생성 및 위치 설정
+                position: position,
+                map: map
+            });
+
+            marker.push(markers); //생성된 마커를 배열에 추가
+            
+            var content = //오버레이 내용
+                "<div class='overlay_wrap' style='position:relative;background:white;width:330px;height:140px;border:1px solid black; '>" +
+                "<div class='overlay_wrap_after' style='position:absolute;border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 30px solid white;top:137px;right:150px; '></div>" +
+                "<div class='overlay_wrap_after1' style='position:absolute;border-left: 20px solid transparent; border-right: 20px solid transparent; border-top: 30px solid black;top:138px;right:150px;z-index:-1; '></div>" +
+                "    <div class='left_box' style='float:left;'>" +
+                "        <div class='img_box' style='margin-left:17px;margin-top:17px;width:105px;height:105px;' >" +
+                "            <img src='" + state.rows.imageurl + "' style='width:100%;height:100%;object-fit:cover;'/>" +
+                "        </div>" +
+                "    </div>" +
+                "    <div class='middle_box' style='float:left;margin-left:17px;margin-top:16px;width:100px;'>" +
+                "        <div class='title' style='font-family:custom_font2;font-size:22px;'>" + state.rows.name + "</div>" +
+                "        <div class='s_title' style='font-family:custom_font2;margin-top:3px;font-size:15px;'>" + state.rows.address + "</div>" +
+                "        <div class='middle_bottom' style='z-index:1;margin-top:30px;'>" +
+                "            <div><img src='" + state.reviewUrl + "' style='width:15px;height:15px;float:left;margin-top:3px;opacity:0.7;'/></div>" +
+                "            <div class='reviewCount' style='float:left;color:#888'>" + state.rows.reviewcount + "</div>" +
+                "            <div><img src='" + state.starUrl + "' style='width:15px;height:15px;float:left;margin-top:3px;margin-left:7px;opacity:0.5'/></div>" +
+                "            <div class='starCount' style='float:left;color:#888'>" + state.rows.bookmarkcount + "</div>" +
+                "        </div>" +
+                "    </div>" +
+                "    <div class='right_box' style='float:left;margin-top:13px;'>" +
+                "        <div class='point' style='font-size:25px;color: rgb(255, 115, 0);'>" + state.rows.point + "</div>" +
+                "    </div>" +
+                "</div>";
+
+            var overlays = new window.kakao.maps.CustomOverlay({ //오버레이 생성및 옵션 설정
+                map: null,
+                position: null,
+                content: content,
+                xAnchor: 0.5,
+                yAnchor: 1.4,
+                zIndex: 3,
+            });
+
+            overlay.push(overlays); //오버레이 배열에 추가
+
+
+            for (let i = 0; i < marker.length; i++) { //마커 클릭시 오버레이 작동
+                window.kakao.maps.event.addListener(marker[i], 'click', function () {
+
+                    for (let j = 0; j < marker.length; j++) { //다른 마커 클릭시 오버레이 제거
+                        overlay[j].setMap(null);
+                    }
+
+                    if (overlay[i].Za === false) { //오버레이 위치 값이 없으면 오버레이 포지션 생성
+                        overlay[i].setPosition(marker[i].getPosition());
+                        overlay[i].setMap(map);
+                    } else if (overlay[i].Za === true) { //오버레이 위치 값이 있으면 마커 클릭시 오버레이 포지션 제거
+                        overlay[i].setMap(null);
+                        overlay[i].Za = false; //오버레이 위치 값을 다시 false값을 넣어준다.
+                    }
+                });
+                window.kakao.maps.event.addListener(map, 'click', function () { //지도 클릭시 오버레이 닫힘
+                    overlay[i].setMap(null);
+                });
+            }
+        }
+
+        //맵 설정
+        const handleMap = () => {
+            let script = document.createElement("script");
+            script.setAttribute("src", "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=550fd443d4e078c255532b8398c15133");
+            document.body.appendChild(script);
+            script.onload = () => {
+                window.kakao.maps.load(initMap); //맵 생성
+            }
+        };
+
         onMounted(() => {
             handleData();
             reviewdata();
             reviewdata5th();
             modalsmallimgdata();
             selectmybookmark();
+            handleMap();
         });
 
         return {
@@ -514,27 +623,34 @@ export default {
     width: 1000px;
     overflow: hidden;
     float: left;
-    padding-left:140px;
-    padding-top:60px;
+    padding-left: 140px;
+    padding-top: 60px;
 }
 
 /* 우측 wrap */
 #right_wrap {
     width: 400px;
-    background-color: #cccccc;
-    height: 1000px;
+    background-color: #e6e1e1;
+    height: 1700px;
     float: left;
     margin-top: 5px;
     margin-left: 40px;
+    padding: 5px;
 }
 
-#left_top{
-    position: relative; 
-    border-bottom: 1px solid #cccccc;  
-    height: 100px; 
+#map {
+    width: 100%;
+    height: 400px;
 }
 
-#left_top_1{
+#left_top {
+    position: relative;
+    border-bottom: 1px solid #cccccc;
+    height: 100px;
+    z-index: -5;
+}
+
+#left_top_1 {
     position: absolute;
     top: 60px;
 }
@@ -555,34 +671,36 @@ export default {
     margin-left: 30px;
 }
 
-#left_top_right{
+#left_top_right {
     margin-left: 570px;
-    z-index:-2;
+    z-index: -2;
 }
 
-#left_top_right::after{
-    content: ""; /*빈내용 */
+#left_top_right::after {
+    content: "";
+    /*빈내용 */
     clear: both;
     display: block;
 }
 
 /* 내용 */
-#content_wrap{
-    border-bottom: 1px solid #cccccc;  
+#content_wrap {
+    border-bottom: 1px solid #cccccc;
     padding: 30px 0;
 }
 
-.content_lbl{
+.content_lbl {
     width: 100px;
     float: left;
     color: gray;
     font-family: custom_font2;
 }
 
-.content_content{
+.content_content {
     font-family: custom_font2;
     margin-bottom: 10px;
 }
+
 .wrapon {
     position: fixed;
 }
@@ -638,7 +756,7 @@ export default {
     float: left;
 }
 
-#review_write_img{
+#review_write_img {
     width: 50px;
     opacity: 0.6;
     float: left;
@@ -666,7 +784,7 @@ export default {
     content: "";
     top: 0px;
     left: 0px;
-    z-index: -2;
+    z-index: -1;
 }
 
 #close_btn {
@@ -682,6 +800,7 @@ export default {
     position: fixed;
     left: 5%;
     top: 5%;
+    z-index: 2;
 }
 
 #modal_inner_box::after {
@@ -770,6 +889,7 @@ export default {
     top: 6%;
     left: 7%;
     object-fit: cover;
+    z-index: 5;
 
     /* 블록선택 막기 */
     -webkit-touch-callout: none;
@@ -842,18 +962,18 @@ export default {
 
 }
 
-#reviewzone_left{
+#reviewzone_left {
     float: left;
 }
 
-#reviewzone_content{
+#reviewzone_content {
     float: left;
     width: 550px;
     margin-left: 30px;
 }
 
-#reviewzone_bottom{
+#reviewzone_bottom {
     margin: 20px 0;
-    
+
 }
 </style>

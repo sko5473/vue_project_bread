@@ -149,6 +149,7 @@ export default {
     width:500px;
     margin:0 auto;
     overflow: hidden;
+    padding-top: 56px;
 }
 
 #review_title{

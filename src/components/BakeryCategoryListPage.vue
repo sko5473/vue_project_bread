@@ -59,9 +59,9 @@ export default {
             page: 1,
             centerLng: 0,
             centerLat: 0,
-            iconname:'',
-            starUrl :null,
-            reviewUrl:null,
+            iconname: '',
+            starUrl : null,
+            reviewUrl: null,
         });
 
         //route변경을 감지해서 변경시 맵과 데이터를 새로 불러온다.
@@ -74,19 +74,6 @@ export default {
            },
            {deep:true}
         );
-
-        //아이콘정보 수신
-        const handleData1 = async () => {
-            const url = `/api/icon/selecticon.json?text=${state.iconname}`;
-            const headers = { "Content-Type": "application/json" };
-            const { data } = await axios.get(url, { headers });
-            console.log("아이콘 데이터 확인", data);
-
-            if (data.status === 200) {
-                state.starUrl = data.result[0].imageurl;
-                state.reviewUrl = data.result[1].imageurl;
-            }
-        };
 
         //상점정보 수신
         const handleData = async () => {
@@ -122,7 +109,16 @@ export default {
         };
 
         // 맵구성정보
-        const initMap = () => {
+        const initMap = async() => {
+            const url = `/api/icon/selecticon.json?text=${state.iconname}`;
+            const headers = { "Content-Type": "application/json" };
+            const { data } = await axios.get(url, { headers });
+            console.log("아이콘 데이터 확인", data);
+
+            if (data.status === 200) {
+                state.starUrl = data.result[0].imageurl;
+                state.reviewUrl = data.result[1].imageurl;
+            }
 
             state.centerLat = state.rows[0].lat; //해당지역으로 검색된 첫번째 lat를 중앙lat로 설정하는 변수에 담는다
             state.centerLng = state.rows[0].lng; //해당지역으로 검색된 첫번째 lat를 중앙lng로 설정하는 변수에 담는다
@@ -219,7 +215,6 @@ export default {
         onMounted(() => {
             handleMap();
             handleData();
-            handleData1();
         });
 
         return {
@@ -250,19 +245,16 @@ export default {
 
 #wrap {
     width: 1565px;
-    position: relative;
     margin: 0 auto;
-    margin-bottom: 100px;
+    overflow: hidden;
     padding-top: 56px;
 }
 
 /* 왼쪽 바 네비게이터 */
 #left_bar {
     width: 500px;
-    height:100%;
     background: rgb(236, 184, 142);
-    position: absolute;
-    left: 0;
+    float: left;
 }
 
 #map {
@@ -273,7 +265,7 @@ export default {
 /* 지역별 빵 맛집 리스트 바로가기 박스 */
 #inner_box {
     position: relative;
-    height: 200px;
+    height: 220px;
 }
 
 /* 지역별 빵 맛집 리스트 바로가기 타이틀 */
@@ -360,9 +352,8 @@ export default {
 }
 
 #pagination_box {
-    position: absolute;
-    left: 50%;
-    margin-bottom: 50px;
+    margin-left: 950px;
+    margin-bottom: 20px;
 }
 
 /* 오버레이 css */

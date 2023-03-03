@@ -489,6 +489,7 @@ export default {
     width: 1565px;
     margin: 0 auto;
     overflow: hidden;
+    padding-top: 56px;
 }
 
 #menu_box {

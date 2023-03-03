@@ -240,6 +240,7 @@ export default {
     margin: 0 auto;
     width: 1440px;
     overflow: hidden;
+    padding-top: 56px;
 }
 
 .field {

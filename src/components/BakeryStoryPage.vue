@@ -131,6 +131,7 @@ export default {
     margin: 0 auto;
     width: 900px;
     overflow: hidden;
+    padding-top: 56px;
 }
 
 /* 고정 기본 메뉴바 */
