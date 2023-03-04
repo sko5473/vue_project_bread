@@ -1,6 +1,12 @@
 <template>
     <div id="login_wrap">
-
+        <el-alert v-if="state.loginSuccess==false" id="errorMsg"
+            title="error alert"
+            type="error"
+            :description=state.loginFailMsg
+            show-icon
+        />
+        <br>
         <div>
             <label for="loginEmail" class="lbl">E-mail</label>
             <el-input type="text" v-model="state.form.loginEmail" class="login_input" placeholder="이메일을 입력하세요." />
@@ -15,12 +21,6 @@
         </div>
         <br>
         <br>
-        <el-alert
-            title="success alert"
-            type="success"
-            description="more text description"
-            show-icon
-        />
         <div>
             <label for="button" class="lbl">&nbsp;</label>
             <el-button @click="handleLogin()" id="loginBtn">로그인</el-button>
@@ -51,6 +51,8 @@ export default {
                 loginPw: "",
             },
             isLogin: "",
+            loginSuccess: true,
+            loginFailMsg: "",
         });
 
         state.isLogin = computed(() => store.state.isLogin);
@@ -75,6 +77,8 @@ export default {
                 store.dispatch("login", data); //로그인성공시 vuex의 login메서드를 실행한다.
             } else {
                 state.form.loginPw = "";
+                state.loginFailMsg = data.message; //로그인 실패 메세지 저장
+                state.loginSuccess = data.loginSuccess;
             }
         }
 
@@ -181,5 +185,9 @@ export default {
 #googlelogin{
     margin-left:100px;
     margin-top:20px;
+}
+
+#errorMsg{
+    width:600px;
 }
 </style>

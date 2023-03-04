@@ -89,24 +89,24 @@
         </div>
 
         <div id="left_wrap">
-            <div id="left_top" v-if="rows">
+            <div id="left_top" v-if="rows && reviewmodal==false">
                 <div id="shop_name">{{ rows.name }}</div>
                 <div id="shop_point">{{ rows.point }}</div>
                 <div id="left_top_right">
                     <div><img src="@/assets/imgs/writing.png" @click="moveReviewWrite()" id="review_write_img" /></div>
                     <!-- 비로그인 일 때 빈 별 -->
                     <div style="opacity:0.7;line-height: 38px;" v-if="isLogin === false">
-                        <div id="empty_star" style="font-size:40px;cursor: pointer;">★</div>
+                        <div id="empty_star" style="font-size:40px;cursor: pointer;float:left;width:20px;">★</div>
                     </div>
 
                     <!-- 로그인 되어 있고 즐찾 안되어 있을때 빈 별 -->
                     <div style="opacity:0.7;line-height: 38px;" v-if="isbookmark === false && isLogin === true">
-                        <div id="empty_star" @click="updateStar()" style="font-size:40px;cursor: pointer;">★</div>
+                        <div id="empty_star" @click="updateStar()" style="font-size:40px;cursor: pointer;float:left;width:20px;">★</div>
                     </div>
 
                     <!-- 로그인 되어 있고 즐찾 되어 있으면 노란 별 -->
                     <div style="opacity:0.7;line-height: 38px;" v-if="isbookmark === true && isLogin === true">
-                        <div id="fill_star" @click="deleteStar()" style="font-size:40px;cursor: pointer;">★</div>
+                        <div id="fill_star" @click="deleteStar()" style="font-size:40px;cursor: pointer;float:left;width:20px;">★</div>
                     </div>
                 </div>
                 <div style="margin-left:565px;">
@@ -197,7 +197,7 @@
         </div>
         <div id="right_wrap">
             <!-- 카카오맵 -->
-            <div id="map"></div>
+            <div id="map" v-if="reviewmodal==false"></div>
 
         </div>
     </div>
@@ -647,7 +647,7 @@ export default {
     position: relative;
     border-bottom: 1px solid #cccccc;
     height: 100px;
-    z-index: -5;
+    /* z-index: -5; */
 }
 
 #left_top_1 {
@@ -673,7 +673,7 @@ export default {
 
 #left_top_right {
     margin-left: 570px;
-    z-index: -2;
+    /* z-index: -2; */
 }
 
 #left_top_right::after {
