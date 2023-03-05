@@ -20,20 +20,20 @@
             <el-timeline>
                 <el-timeline-item timestamp="2023/3/14" placement="top">
                 <el-card>
-                    <h4>프로젝트 발표 및 마무리</h4>
+                    <h4>배포</h4>
                     <p>Lee committed 2023/3/14 10:00</p>
                 </el-card>
                 </el-timeline-item>
-                <el-timeline-item timestamp="2023/3/7" placement="top">
+                <el-timeline-item timestamp="2023/3/10" placement="top">
                 <el-card>
                     <h4>프로젝트 테스트</h4>
-                    <p>Lee committed 2023/3/7 15:20</p>
+                    <p>Lee committed 2023/3/10 15:20</p>
                 </el-card>
                 </el-timeline-item>
-                <el-timeline-item timestamp="2023/2/28" placement="top">
+                <el-timeline-item timestamp="2023/3/4" placement="top">
                 <el-card>
                     <h4>프로젝트 개발</h4>
-                    <p>Lee committed 2023/2/28 13:20</p>
+                    <p>Lee committed 2023/3/4 13:20</p>
                 </el-card>
                 </el-timeline-item>
                 <el-timeline-item timestamp="2023/2/7" placement="top">
