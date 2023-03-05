@@ -174,7 +174,7 @@ export default {
 
     #navbarSupportedContent{
         height: 150px;
-        width: 460px;
+        width: 500px;
     }
 
     .small_menu{
