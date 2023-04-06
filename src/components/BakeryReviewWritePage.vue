@@ -71,6 +71,7 @@ export default {
             if (e.target.files.length > 0) {
                 state.file = e.target.files[0];
                 state.img = URL.createObjectURL(state.file);
+                console.log('파일확인',state.file);
             } else {
                 state.file = null;
                 state.img = require('../assets/imgs/noimage.gif');
