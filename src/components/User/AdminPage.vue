@@ -33,7 +33,7 @@
                         </tbody>
                     </table>
                     <div class="example-pagination-block">
-                        <el-pagination layout="prev, pager, next" :total="state.questionTotal" />
+                        <el-pagination layout="prev, pager, next" :total="state.questionTotal" @current-change="handlePage"/>
                     </div>
                 </div>
             </div>
@@ -92,8 +92,11 @@ export default {
             userInfo: null,
             replyContent: "",
             onequestionreplyRows: null,
+            page: 1,
         });
+
         state.userInfo = computed(() => store.state.userInfo);
+
         //문의글 목록 조회
         const handleQuestion = async () => {
             const url = `/api/question/selectquestion.json?page=${state.page}&text=${state.text}`;
@@ -105,6 +108,7 @@ export default {
                 state.questionTotal = data.total;
             }
         };
+
         //1개 문의글 조회
         const handleOneQuestion = async (num) => {
             const url = `/api/question/selectonequestion.json?_id=${num}`;
@@ -117,6 +121,7 @@ export default {
                 state.onequestionprev = data.prev;
             }
         };
+
         //1:1문의 답변글 등록
         const reply = async () => {
             const url = `/api/question/replyquestion.json`;
@@ -134,6 +139,7 @@ export default {
                 handleQuestion();
             }
         };
+
         //글의 상태 변경 함수(답글대기, 답글완료)
         const updatequestionstatus = async () => {
             const url = `/api/question/updatequestionstate.json?_id=${state.questionNum}`;
@@ -156,6 +162,12 @@ export default {
             }
         };
 
+        //페이지네이션
+        const handlePage = (page) => {
+            state.page = page;
+            handleQuestion();
+        };
+
         onMounted(() => {
             handleQuestion();
         });
@@ -166,6 +178,7 @@ export default {
             reply,
             updatequestionstatus,
             selectonequestionrelply,
+            handlePage
         };
     },
     
