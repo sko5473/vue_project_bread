@@ -41,12 +41,12 @@ export default createStore({
             commit("loginSuccess", data)
             dispatch("getMemberInfo")
         },
-        getMemberInfo({ commit }) {
+        async getMemberInfo({ commit }) {
 
             //페이지 새로고침시 토큰 유효성 확인
             const headers = { "Content-Type": "application/json" }
-            axios.get(`/api/user/auth`, { headers })
-                 .then(response =>{
+            await axios.get(`/api/user/auth`, { headers })
+                .then(response =>{
                     if(response.data.isAuth !== false){
                         commit("loginSuccess", response.data)
                     }

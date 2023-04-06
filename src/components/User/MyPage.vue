@@ -1,4 +1,5 @@
 <template>
+    
     <div id="mypage_wrap">
         <div id="menu_box">
             <ul id="menu">
@@ -6,11 +7,13 @@
                 <li @click="state.mynum = 2">회원정보 수정</li>
                 <li @click="state.mynum = 3">내 문의사항</li>
                 <li @click="state.mynum = 5">내 즐겨찾기 목록</li>
+                {{ state.userInfo }}
             </ul>
         </div>
         <div id="content_box">
+            
             <!-- 나의 정보 -->
-            <div v-if="state.mynum === 1" class="myinf">
+            <div v-if="state.mynum === 1&&state.userInfo" class="myinf">
                 <div class="myinf_wrap">
                     <div class="myinf_left">
                         <div class="myinf_con">
@@ -47,10 +50,10 @@
                                     aria-label="Example with label" style="width: 50%;" aria-valuenow="25"
                                     aria-valuemin="0" aria-valuemax="100">{{ state.certpercent }}%</div>
                             </div>
-                            <el-popover :visible="visible" placement="bottom" :width="100"
+                            <el-popover placement="bottom" :width="100"
                                 content=">빵입문 : 0 ~ 9% 빵린이 : 10 ~ 29% 빵중수 : 30 ~ 49% 빵고수 : 50 ~ 69%  빵지존 : 70 ~ 89%">
                                 <template #reference>
-                                    <el-button class="m-2" @click="visible = !visible">등급안내</el-button>
+                                    <el-button class="m-2">등급안내</el-button>
                                 </template>
                             </el-popover>
                         </div>
@@ -172,7 +175,7 @@
                     <span v-if="state.onequestionreplyRows === null">답글 내용이 없습니다.</span>
                 </div>
             </div>
-
+            
             <!-- 내 즐겨찾기 목록 -->
             <div v-if="state.mynum === 5" class="myinf">
                 <table class="table table-hover">
@@ -206,6 +209,7 @@ import axios from 'axios';
 import { reactive, computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import { watch } from '@vue/runtime-core';
 
 export default {
     setup() {
@@ -222,7 +226,7 @@ export default {
             detailaddress: '',
             password: '',
             password1: '',
-            userInfo: null,
+            userInfo: computed(() => store.state.userInfo),
             text: '',
             page: 1,
             questionRows: null,
@@ -240,7 +244,20 @@ export default {
         });
 
         //vuex로부터 jwt쿠키 재인증으로부터 받은 user정보를 받아온다.
-        state.userInfo = computed(() => store.state.userInfo);
+        // state.userInfo = computed(() => store.state.userInfo);
+
+        //route변경을 감지해서 변경시 맵과 데이터를 새로 불러온다.
+        watch(
+           () => state.userInfo,
+           ()=>{
+                imagestate();
+                handleQuestion();
+                selectshopcount();
+                selectmyshopreviewcount();
+                selectallmybookmark();
+           },
+           {deep:true}
+        );
 
         //유효성검사용
         const password = ref();
@@ -410,6 +427,7 @@ export default {
             const url = `/api/bakery/selectshopcount.json`;
             const headers = { "Content-Type": "application/json" };
             const { data } = await axios.get(url, { headers });
+            console.log("빵집 전체수 조회", data);
 
             if (data.status === 200) {
                 state.totalshopcount = data.total;
@@ -462,11 +480,6 @@ export default {
             let script = document.createElement('script');
             script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
             document.head.appendChild(script);
-            imagestate();
-            handleQuestion();
-            selectshopcount();
-            selectmyshopreviewcount();
-            selectallmybookmark();
         });
 
         return {
